@@ -1,0 +1,2199 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reward Flow Simulator V11 | Auto Firebase Sync | Admin + Partner | نظام محاكاة المكافآت</title>
+  <style>
+    :root{
+      --bg:#f6f7fb;
+      --panel:#ffffff;
+      --panel2:#f9fafc;
+      --text:#1e293b;
+      --muted:#64748b;
+      --brand:#4f46e5;
+      --brand2:#06b6d4;
+      --brand3:#10b981;
+      --warn:#f59e0b;
+      --danger:#ef4444;
+      --good:#16a34a;
+      --border:#e2e8f0;
+      --shadow:0 16px 40px rgba(15,23,42,.08);
+      --radius:22px;
+      --radius2:14px;
+      --sidebar:300px;
+      --font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Tahoma, Arial, sans-serif;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:radial-gradient(circle at top left,#e0f2fe 0,#f6f7fb 28%,#f8fafc 70%);font-family:var(--font);color:var(--text);min-height:100vh}
+    button,input,select,textarea{font:inherit}
+    .app{display:grid;grid-template-columns:var(--sidebar) 1fr;min-height:100vh}
+    .sidebar{background:rgba(255,255,255,.82);backdrop-filter:blur(18px);border-left:1px solid var(--border);padding:22px 18px;position:sticky;top:0;height:100vh;overflow:auto;box-shadow:-10px 0 30px rgba(15,23,42,.04)}
+    .brand{display:flex;gap:12px;align-items:center;margin-bottom:22px}
+    .logo{width:48px;height:48px;border-radius:18px;background:linear-gradient(135deg,var(--brand),var(--brand2));display:grid;place-items:center;color:#fff;font-weight:900;box-shadow:0 14px 28px rgba(79,70,229,.25)}
+    .brand h1{font-size:18px;margin:0;line-height:1.2}.brand p{margin:4px 0 0;color:var(--muted);font-size:12px}
+    .nav{display:grid;gap:8px}.nav button{border:0;background:transparent;color:var(--text);padding:13px 14px;border-radius:16px;text-align:right;cursor:pointer;display:flex;gap:10px;align-items:center;justify-content:flex-start}.nav button:hover{background:#eef2ff}.nav button.active{background:linear-gradient(135deg,#eef2ff,#ecfeff);color:#312e81;font-weight:800;box-shadow:inset 0 0 0 1px #c7d2fe}.nav .num{width:26px;height:26px;border-radius:10px;background:#e0e7ff;color:#4338ca;display:grid;place-items:center;font-size:12px;font-weight:800;flex:0 0 auto}.side-card{margin-top:18px;background:linear-gradient(135deg,#111827,#312e81);color:#fff;border-radius:20px;padding:16px;box-shadow:var(--shadow)}.side-card h3{margin:0 0 8px;font-size:15px}.side-card p{margin:0;color:#dbeafe;font-size:12px;line-height:1.7}.content{padding:24px 28px 46px;overflow:hidden}.topbar{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:20px}.title h2{margin:0;font-size:28px;letter-spacing:-.5px}.title p{margin:6px 0 0;color:var(--muted)}.actions{display:flex;gap:8px;flex-wrap:wrap}.btn{border:0;border-radius:14px;padding:11px 14px;cursor:pointer;background:#fff;color:var(--text);box-shadow:0 3px 12px rgba(15,23,42,.08);border:1px solid var(--border);font-weight:700}.btn.primary{background:linear-gradient(135deg,var(--brand),#7c3aed);color:#fff;border:0}.btn.good{background:linear-gradient(135deg,#10b981,#059669);color:#fff;border:0}.btn.warn{background:linear-gradient(135deg,#f59e0b,#f97316);color:#fff;border:0}.btn.danger{background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff;border:0}.btn.ghost{box-shadow:none;background:#f8fafc}.btn.small{font-size:12px;padding:8px 10px;border-radius:11px}.grid{display:grid;gap:16px}.grid.two{grid-template-columns:1.1fr .9fr}.grid.three{grid-template-columns:repeat(3,1fr)}.grid.four{grid-template-columns:repeat(4,1fr)}.card{background:rgba(255,255,255,.9);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;overflow:hidden}.card h3{margin:0 0 10px;font-size:18px}.card .hint{color:var(--muted);font-size:13px;line-height:1.7;margin:0 0 12px}.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}.kpi{background:linear-gradient(135deg,#fff,#f8fafc);border:1px solid var(--border);border-radius:20px;padding:16px;box-shadow:0 10px 22px rgba(15,23,42,.04);position:relative;overflow:hidden}.kpi:before{content:"";position:absolute;inset:auto -20px -35px auto;width:90px;height:90px;border-radius:999px;background:rgba(79,70,229,.08)}.kpi span{display:block;color:var(--muted);font-size:12px}.kpi strong{display:block;font-size:24px;margin-top:6px}.table-wrap{width:100%;overflow:auto;border:1px solid var(--border);border-radius:18px;background:#fff}.table{width:100%;border-collapse:separate;border-spacing:0;min-width:1050px}.table th,.table td{border-bottom:1px solid var(--border);padding:10px;text-align:right;vertical-align:middle;font-size:13px;white-space:nowrap}.table th{position:sticky;top:0;background:#f8fafc;z-index:2;color:#475569;font-size:12px}.table tr:last-child td{border-bottom:0}.table input,.table select{width:100%;min-width:100px;border:1px solid #dbe3ee;border-radius:11px;padding:8px;background:#fff;color:var(--text)}.table input[type=number]{direction:ltr;text-align:left}.calc{font-weight:800;color:#0f172a;background:#f8fafc;border-radius:10px;padding:8px 10px;display:inline-block;min-width:88px;text-align:center}.badge{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:6px 10px;font-size:12px;font-weight:800}.badge.low{background:#dcfce7;color:#166534}.badge.medium{background:#fef3c7;color:#92400e}.badge.high{background:#fee2e2;color:#991b1b}.badge.critical{background:#7f1d1d;color:#fff}.badge.info{background:#e0f2fe;color:#075985}.form-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.field{display:grid;gap:7px}.field label{font-size:12px;color:#475569;font-weight:800}.field input,.field select,.field textarea{border:1px solid #dbe3ee;border-radius:14px;padding:11px 12px;background:#fff;color:var(--text)}.field input[type=number]{direction:ltr;text-align:left}.field textarea{min-height:120px;resize:vertical;line-height:1.7}.section{display:none}.section.active{display:block}.pill-row{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.pill{border-radius:999px;background:#f1f5f9;color:#334155;padding:7px 11px;font-size:12px;font-weight:700}.notice{border-radius:18px;padding:14px 16px;background:#eef2ff;border:1px solid #c7d2fe;color:#312e81;line-height:1.7}.notice.warn{background:#fff7ed;border-color:#fed7aa;color:#9a3412}.notice.good{background:#ecfdf5;border-color:#bbf7d0;color:#166534}.matrix-table{min-width:900px}.matrix-input{max-width:88px;text-align:center!important}.row-ok{color:var(--good);font-weight:900}.row-bad{color:var(--danger);font-weight:900}.chart-box{height:280px;border:1px solid var(--border);border-radius:18px;background:linear-gradient(180deg,#fff,#f8fafc);padding:8px}.recommend{display:grid;gap:10px}.rec-card{padding:14px;border-radius:18px;border:1px solid var(--border);background:#fff}.rec-card h4{margin:0 0 6px}.rec-card p{margin:0;color:#475569;line-height:1.7;font-size:13px}.ai-output{white-space:pre-wrap;background:#0f172a;color:#e5e7eb;border-radius:18px;padding:16px;min-height:140px;line-height:1.8;direction:rtl}.footer-note{margin-top:18px;color:#64748b;font-size:12px;line-height:1.7}.toast{position:fixed;bottom:22px;left:22px;background:#0f172a;color:#fff;padding:13px 16px;border-radius:16px;box-shadow:var(--shadow);opacity:0;transform:translateY(10px);transition:.25s;z-index:9999}.toast.show{opacity:1;transform:translateY(0)}.modal-backdrop{position:fixed;inset:0;background:rgba(15,23,42,.55);display:none;align-items:center;justify-content:center;padding:18px;z-index:9998}.modal-backdrop.show{display:flex}.modal{background:#fff;border-radius:24px;box-shadow:0 30px 80px rgba(0,0,0,.3);max-width:820px;width:100%;max-height:90vh;overflow:auto;padding:20px}.modal h3{margin-top:0}.modal pre{white-space:pre-wrap;direction:ltr;text-align:left;background:#0f172a;color:#e5e7eb;border-radius:16px;padding:14px;overflow:auto}.mobile-toggle{display:none}.sep{height:1px;background:var(--border);margin:14px 0}.ltr{direction:ltr;text-align:left}.subtle{font-size:12px;color:#64748b}.scenario-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 14px}.scenario-tabs button{border:1px solid var(--border);background:#fff;border-radius:999px;padding:9px 13px;cursor:pointer;font-weight:800}.scenario-tabs button.active{background:#111827;color:#fff;border-color:#111827}.empty{padding:30px;text-align:center;color:#64748b}.progress{height:10px;background:#e2e8f0;border-radius:999px;overflow:hidden}.progress span{display:block;height:100%;background:linear-gradient(90deg,var(--brand),var(--brand2));border-radius:999px}.mini{font-size:11px;color:#64748b}.copy{cursor:pointer}.hidden{display:none!important}
+
+    .dashboard-tabs{justify-content:flex-start;background:rgba(255,255,255,.7);border:1px solid var(--border);border-radius:999px;padding:6px;width:max-content;max-width:100%;box-shadow:0 10px 24px rgba(15,23,42,.05)}
+    .dashboard-tabs button{min-width:92px;text-align:center;transition:.2s}.dashboard-tabs button.active{background:linear-gradient(135deg,#111827,#3730a3);box-shadow:0 12px 24px rgba(49,46,129,.18)}
+    .dashboard-hero{background:linear-gradient(135deg,#111827,#312e81 60%,#0891b2);color:#fff;border:0;position:relative;overflow:hidden}.dashboard-hero:after{content:"";position:absolute;inset:auto -80px -100px auto;width:260px;height:260px;border-radius:999px;background:rgba(255,255,255,.10)}.dashboard-hero .hint{color:#dbeafe}.dashboard-hero .kpi{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.18);box-shadow:none;color:#fff}.dashboard-hero .kpi span{color:#dbeafe}.dashboard-hero .kpi strong{color:#fff}
+    .dashboard-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:16px}.dashboard-panel{min-height:380px}.smart-chart{display:grid;gap:12px;max-height:420px;overflow:auto;padding:2px}.bar-card,.risk-item,.profit-row{border:1px solid var(--border);border-radius:18px;background:linear-gradient(135deg,#fff,#f8fafc);padding:13px;box-shadow:0 8px 18px rgba(15,23,42,.04)}.bar-head,.risk-head,.profit-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}.bar-title,.risk-title{font-weight:900;color:#0f172a}.bar-sub,.risk-sub{font-size:12px;color:#64748b}.dual-bars{display:grid;gap:7px}.bar-line{display:grid;grid-template-columns:82px 1fr 92px;gap:8px;align-items:center;font-size:12px;color:#475569}.track{height:12px;background:#e2e8f0;border-radius:999px;overflow:hidden}.track span{height:100%;display:block;border-radius:999px}.track .issued{background:linear-gradient(90deg,#4f46e5,#06b6d4)}.track .redeemed{background:linear-gradient(90deg,#f59e0b,#ef4444)}.track .profit{background:linear-gradient(90deg,#10b981,#06b6d4)}.track .loss{background:linear-gradient(90deg,#f97316,#ef4444)}
+    .risk-item{display:grid;gap:9px}.risk-meta{display:flex;align-items:center;justify-content:space-between;gap:10px}.risk-score{font-weight:900}.risk-net.positive{color:#16a34a}.risk-net.negative{color:#dc2626}.profit-note{border-radius:18px;padding:14px 16px;background:#f0fdf4;border:1px solid #bbf7d0;color:#14532d;line-height:1.7}.profit-note.warn{background:#fffbeb;border-color:#fde68a;color:#92400e}.profit-cards{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:16px}.profit-card{background:rgba(255,255,255,.94);border:1px solid var(--border);border-radius:20px;padding:15px;box-shadow:0 10px 22px rgba(15,23,42,.05);position:relative;overflow:hidden}.profit-card:before{content:"";position:absolute;inset:auto -30px -45px auto;width:110px;height:110px;border-radius:999px;background:rgba(16,185,129,.08)}.profit-card span{display:block;color:#64748b;font-size:12px}.profit-card strong{display:block;font-size:21px;margin-top:6px}.profit-card.good strong{color:#16a34a}.profit-card.warn strong{color:#d97706}.profit-card.bad strong{color:#dc2626}.profit-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.profit-waterfall{display:grid;gap:12px}.waterfall-step{display:grid;grid-template-columns:170px 1fr 110px;gap:10px;align-items:center}.waterfall-label{font-weight:800;font-size:13px}.waterfall-value{text-align:left;direction:ltr;font-weight:900}.profit-explain{display:grid;gap:10px}.profit-formula{background:#0f172a;color:#e5e7eb;border-radius:18px;padding:14px;line-height:1.8;direction:rtl}.profit-table .good-num{color:#16a34a;font-weight:900}.profit-table .bad-num{color:#dc2626;font-weight:900}
+    @media(max-width:1100px){.dashboard-grid,.profit-grid{grid-template-columns:1fr}.profit-cards{grid-template-columns:1fr 1fr}.dashboard-tabs{width:100%;justify-content:center}.bar-line,.waterfall-step{grid-template-columns:1fr}.bar-line .bar-value,.waterfall-value{text-align:right}.dashboard-panel{min-height:auto}}
+    @media(max-width:650px){.profit-cards{grid-template-columns:1fr}.bar-head,.risk-head,.risk-meta,.profit-head{align-items:flex-start;flex-direction:column}}
+    .overview-modern{display:grid;grid-template-columns:1.15fr .85fr;gap:16px;margin-top:16px}
+    .overview-panel{min-height:390px}
+    .overview-card-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+    .overview-quick-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px}
+    .mini-kpi{border:1px solid var(--border);border-radius:18px;background:linear-gradient(135deg,#fff,#f8fafc);padding:13px;position:relative;overflow:hidden;box-shadow:0 8px 18px rgba(15,23,42,.04)}
+    .mini-kpi:before{content:"";position:absolute;inset:auto -28px -38px auto;width:90px;height:90px;border-radius:999px;background:rgba(79,70,229,.08)}
+    .mini-kpi span{display:block;color:#64748b;font-size:12px;margin-bottom:5px}.mini-kpi strong{font-size:20px;color:#0f172a}.mini-kpi.good strong{color:#16a34a}.mini-kpi.warn strong{color:#d97706}.mini-kpi.bad strong{color:#dc2626}
+    .overview-flow-list{display:grid;gap:10px;max-height:310px;overflow:auto;padding:2px}
+    .flow-card{border:1px solid var(--border);border-radius:18px;background:#fff;padding:12px;box-shadow:0 8px 18px rgba(15,23,42,.04)}
+    .flow-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:9px}.flow-title{font-weight:900}.flow-sub{font-size:12px;color:#64748b}.flow-net.positive{color:#16a34a}.flow-net.negative{color:#dc2626}
+    .overview-recs{display:grid;gap:10px;max-height:330px;overflow:auto;padding:2px}.overview-recs .rec-card{border-radius:18px;background:linear-gradient(135deg,#fff,#f8fafc);border:1px solid var(--border);box-shadow:0 8px 18px rgba(15,23,42,.04)}
+    .overview-recs .rec-card h4{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}.action-chip{display:inline-flex;align-items:center;border-radius:999px;padding:6px 9px;background:#f1f5f9;color:#334155;font-size:11px;font-weight:800;margin-top:8px}
+    .overview-next-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}.step-card{border:1px solid var(--border);border-radius:18px;background:rgba(255,255,255,.92);padding:14px;box-shadow:0 8px 18px rgba(15,23,42,.04)}.step-card b{display:block;margin-bottom:6px}.step-card p{margin:0;color:#64748b;font-size:13px;line-height:1.7}
+    @media(max-width:1100px){.overview-modern{grid-template-columns:1fr}.overview-quick-cards,.overview-next-actions{grid-template-columns:1fr 1fr}}
+    @media(max-width:650px){.overview-quick-cards,.overview-next-actions{grid-template-columns:1fr}.flow-top{align-items:flex-start;flex-direction:column}}
+
+    @media(max-width:1100px){.app{grid-template-columns:1fr}.sidebar{position:fixed;right:0;top:0;bottom:0;width:310px;z-index:9000;transform:translateX(105%);transition:.25s}.sidebar.open{transform:translateX(0)}.content{padding:18px}.mobile-toggle{display:inline-flex}.grid.two,.grid.three,.grid.four,.kpis,.form-grid{grid-template-columns:1fr}.topbar{align-items:flex-start}.title h2{font-size:22px}.actions{justify-content:flex-start}.card{padding:14px}}
+
+    /* V6 decision, pitch and stress-test design */
+    .decision-hero{background:linear-gradient(135deg,#0f172a,#4338ca 55%,#0891b2);color:#fff;border:0;position:relative;overflow:hidden}.decision-hero:after{content:"";position:absolute;inset:auto -80px -100px auto;width:290px;height:290px;border-radius:999px;background:rgba(255,255,255,.10)}.decision-hero .hint{color:#dbeafe}.decision-hero .kpi{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.18);box-shadow:none}.decision-hero .kpi span{color:#dbeafe}.decision-hero .kpi strong{color:#fff}
+    .decision-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.decision-card{border:1px solid var(--border);border-radius:22px;padding:16px;background:linear-gradient(135deg,#fff,#f8fafc);box-shadow:0 12px 26px rgba(15,23,42,.05);position:relative;overflow:hidden}.decision-card:before{content:"";position:absolute;inset:auto -30px -40px auto;width:110px;height:110px;border-radius:999px;background:rgba(79,70,229,.08)}.decision-card span{display:block;color:var(--muted);font-size:12px;font-weight:800}.decision-card strong{display:block;font-size:26px;margin-top:8px}.decision-card.good strong{color:#15803d}.decision-card.warn strong{color:#b45309}.decision-card.bad strong{color:#b91c1c}
+    .decision-chip{border-radius:999px;padding:7px 11px;font-weight:900;font-size:12px;display:inline-flex;align-items:center;gap:6px}.decision-chip.accept{background:#dcfce7;color:#166534}.decision-chip.conditions{background:#e0f2fe;color:#075985}.decision-chip.negotiate{background:#fef3c7;color:#92400e}.decision-chip.reject{background:#fee2e2;color:#991b1b}
+    .score-ring{width:58px;height:58px;border-radius:999px;display:grid;place-items:center;background:conic-gradient(var(--brand) calc(var(--score)*1%),#e2e8f0 0);position:relative;font-weight:900}.score-ring:before{content:"";position:absolute;width:42px;height:42px;border-radius:999px;background:#fff}.score-ring span{position:relative;font-size:12px;color:#0f172a}.insight-list{display:grid;gap:10px}.insight-card{border:1px solid var(--border);border-radius:18px;background:#fff;padding:13px}.insight-card h4{margin:0 0 6px}.insight-card p{margin:0;color:#475569;line-height:1.7;font-size:13px}
+    .pitch-wrap{display:grid;grid-template-columns:.75fr 1.25fr;gap:16px}.pitch-preview{background:linear-gradient(135deg,#111827,#312e81 60%,#0e7490);border-radius:28px;color:#fff;padding:24px;min-height:460px;box-shadow:var(--shadow);position:relative;overflow:hidden}.pitch-preview:after{content:"";position:absolute;inset:auto -120px -130px auto;width:330px;height:330px;border-radius:999px;background:rgba(255,255,255,.10)}.pitch-preview h2{margin:0;font-size:30px;line-height:1.25}.pitch-preview p{color:#dbeafe;line-height:1.8}.pitch-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0}.pitch-metric{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);border-radius:18px;padding:13px}.pitch-metric span{display:block;color:#cbd5e1;font-size:12px}.pitch-metric strong{display:block;color:#fff;font-size:20px;margin-top:5px}.pitch-point{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.18);border-radius:18px;padding:13px;margin-top:10px;color:#f8fafc;line-height:1.8}.pitch-editor{display:grid;gap:12px}.copy-box{background:#0f172a;color:#e5e7eb;border-radius:18px;padding:16px;line-height:1.9;white-space:pre-wrap;min-height:180px}
+    .stress-controls{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.slider-field{border:1px solid var(--border);border-radius:18px;background:#fff;padding:13px}.slider-field label{display:flex;justify-content:space-between;gap:10px;color:#334155;font-weight:900;font-size:13px}.slider-field input[type=range]{width:100%;margin-top:12px}.stress-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.scenario-compare{display:grid;gap:10px}.compare-row{border:1px solid var(--border);background:#fff;border-radius:18px;padding:13px;display:grid;grid-template-columns:160px 1fr 100px;gap:12px;align-items:center}.compare-row b{font-size:13px}.compare-row .delta{font-weight:900;text-align:left}.delta.good{color:#15803d}.delta.bad{color:#b91c1c}.break-even-card{border:1px solid var(--border);border-radius:18px;padding:14px;background:linear-gradient(135deg,#fff,#f8fafc)}.break-even-card b{font-size:18px}.break-even-card p{margin:6px 0 0;color:#64748b;line-height:1.7;font-size:13px}
+    @media(max-width:1100px){.decision-grid{grid-template-columns:repeat(2,1fr)}.pitch-wrap,.stress-grid{grid-template-columns:1fr}.stress-controls{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:700px){.decision-grid,.stress-controls,.pitch-metrics{grid-template-columns:1fr}.compare-row{grid-template-columns:1fr}.pitch-preview h2{font-size:24px}}
+
+
+
+    /* V7 scenario library */
+    .library-hero{background:linear-gradient(135deg,#020617,#4f46e5 52%,#06b6d4);color:#fff;border:0;position:relative;overflow:hidden}.library-hero:before{content:"";position:absolute;inset:-80px auto auto -80px;width:230px;height:230px;border-radius:999px;background:rgba(255,255,255,.10)}.library-hero .hint{color:#dbeafe}.library-hero .kpi{background:rgba(255,255,255,.13);border-color:rgba(255,255,255,.20);box-shadow:none}.library-hero .kpi span{color:#cbd5e1}.library-hero .kpi strong{color:#fff}
+    .library-toolbar{display:grid;grid-template-columns:1.2fr .7fr auto;gap:10px;align-items:end}.library-toolbar input,.library-toolbar select{border:1px solid #dbe3ee;border-radius:14px;padding:11px 12px;background:#fff;color:var(--text)}
+    .scenario-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.scenario-card{border:1px solid var(--border);border-radius:22px;background:linear-gradient(135deg,#fff,#f8fafc);box-shadow:0 12px 26px rgba(15,23,42,.05);padding:16px;position:relative;overflow:hidden}.scenario-card:after{content:"";position:absolute;inset:auto -34px -42px auto;width:120px;height:120px;border-radius:999px;background:rgba(79,70,229,.07)}.scenario-card h4{margin:0 0 6px;font-size:16px}.scenario-card .meta{font-size:12px;color:#64748b;line-height:1.7}.scenario-card .numline{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-top:10px}.scenario-card .numline b{font-size:18px}.scenario-card .actions{position:relative;z-index:1;margin-top:12px}.scenario-tag{display:inline-flex;border-radius:999px;padding:6px 10px;font-size:11px;font-weight:900;background:#eef2ff;color:#3730a3;margin-inline-start:6px}.scenario-tag.safe{background:#dcfce7;color:#166534}.scenario-tag.risky{background:#fee2e2;color:#991b1b}.scenario-tag.profit{background:#ecfeff;color:#155e75}
+    .recommendation-board{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.recommendation-tile{border:1px solid var(--border);border-radius:22px;background:#fff;padding:16px;box-shadow:0 10px 22px rgba(15,23,42,.04)}.recommendation-tile h4{margin:0 0 8px}.recommendation-tile p{margin:0;color:#475569;line-height:1.7;font-size:13px}.recommendation-tile strong{font-size:22px;display:block;margin:6px 0;color:#0f172a}
+    .decision-map{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.map-column{border:1px solid var(--border);border-radius:22px;background:#fff;min-height:180px;overflow:hidden}.map-column h4{margin:0;padding:13px 14px;background:#f8fafc;border-bottom:1px solid var(--border)}.map-column.start h4{background:#dcfce7;color:#166534}.map-column.negotiate h4{background:#fef3c7;color:#92400e}.map-column.watch h4{background:#e0f2fe;color:#075985}.map-column.avoid h4{background:#fee2e2;color:#991b1b}.map-item{padding:12px 14px;border-bottom:1px solid var(--border)}.map-item:last-child{border-bottom:0}.map-item b{display:block;font-size:13px}.map-item span{display:block;color:#64748b;font-size:12px;margin-top:4px}.tiny-chart{height:8px;border-radius:999px;background:#e2e8f0;overflow:hidden;margin-top:8px}.tiny-chart i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#4f46e5,#06b6d4)}
+    @media(max-width:1100px){.scenario-cards,.recommendation-board,.decision-map{grid-template-columns:1fr 1fr}.library-toolbar{grid-template-columns:1fr}}
+    @media(max-width:700px){.scenario-cards,.recommendation-board,.decision-map{grid-template-columns:1fr}}
+
+
+    .cloud-hero{background:linear-gradient(135deg,#0f172a,#1d4ed8 58%,#06b6d4);color:#fff;border:0;position:relative;overflow:hidden}.cloud-hero:after{content:"";position:absolute;inset:auto -80px -110px auto;width:260px;height:260px;border-radius:999px;background:rgba(255,255,255,.1)}.cloud-hero .hint{color:#dbeafe}.cloud-status{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.cloud-dot{width:12px;height:12px;border-radius:999px;background:#f59e0b;box-shadow:0 0 0 5px rgba(245,158,11,.18)}.cloud-dot.ready{background:#22c55e;box-shadow:0 0 0 5px rgba(34,197,94,.18)}.cloud-dot.error{background:#ef4444;box-shadow:0 0 0 5px rgba(239,68,68,.18)}.cloud-actions{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:end}.cloud-card-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.cloud-table-actions{display:flex;gap:6px;flex-wrap:wrap}.sync-chip{display:inline-flex;align-items:center;gap:6px;background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe;border-radius:999px;padding:6px 10px;font-size:12px;font-weight:900}.rules-box{white-space:pre-wrap;direction:ltr;text-align:left;background:#0f172a;color:#e5e7eb;border-radius:18px;padding:14px;line-height:1.7;overflow:auto}@media(max-width:850px){.cloud-actions,.cloud-card-grid{grid-template-columns:1fr}}
+
+
+    .mode-pill{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:#eef2ff;color:#312e81;font-weight:900;font-size:12px;border:1px solid #c7d2fe}
+    .presentation-hero{background:linear-gradient(135deg,#111827,#4f46e5 55%,#06b6d4);color:#fff;border:0;position:relative;overflow:hidden}
+    .presentation-hero:after{content:"";position:absolute;inset:auto -70px -100px auto;width:250px;height:250px;border-radius:999px;background:rgba(255,255,255,.10)}
+    .presentation-hero h3{font-size:30px;margin:0 0 8px}.presentation-hero .hint{color:#dbeafe}.presentation-hero>*{position:relative;z-index:1}
+    .pitch-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.pitch-card{border:1px solid var(--border);background:#fff;border-radius:22px;padding:16px;box-shadow:0 10px 25px rgba(15,23,42,.05)}.pitch-card b{display:block;font-size:24px;margin:8px 0}.pitch-card span{color:#64748b;font-size:12px}.pitch-card p{margin:8px 0 0;color:#475569;line-height:1.7;font-size:13px}
+    .flow-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.flow-step{background:linear-gradient(180deg,#fff,#f8fafc);border:1px solid var(--border);border-radius:20px;padding:15px}.flow-step .stepnum{width:34px;height:34px;border-radius:12px;background:#eef2ff;color:#4338ca;font-weight:900;display:grid;place-items:center;margin-bottom:10px}.flow-step h4{margin:0 0 8px}.flow-step p{margin:0;color:#64748b;line-height:1.7;font-size:13px}
+    .admin-lock{max-width:560px;margin:30px auto}.admin-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.admin-tile{border:1px solid var(--border);border-radius:22px;background:#fff;padding:16px;box-shadow:0 10px 25px rgba(15,23,42,.05)}.admin-tile h4{margin:0 0 8px}.admin-tile p{margin:0 0 12px;color:#64748b;line-height:1.6;font-size:13px}.admin-badge{display:inline-flex;border-radius:999px;background:#ecfeff;color:#155e75;border:1px solid #a5f3fc;padding:6px 10px;font-size:12px;font-weight:900}
+    body.lang-en{direction:ltr}body.lang-en .sidebar,body.lang-en .content,body.lang-en .table th,body.lang-en .table td{text-align:left}body.lang-en .nav button{text-align:left;justify-content:flex-start}body.lang-en .ai-output{direction:ltr}body.lang-en .table input[type=number],body.lang-en .field input[type=number]{text-align:right}
+    @media(max-width:900px){.pitch-grid,.flow-steps,.admin-grid{grid-template-columns:1fr}}
+
+    @media print{.sidebar,.actions,.mobile-toggle,.btn,.toast{display:none!important}.app{display:block}.content{padding:0}.card{box-shadow:none;break-inside:avoid}.section{display:block!important}}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="logo">RF</div>
+        <div>
+          <h1>Reward Flow Simulator</h1>
+          <p>نظام محاكاة المكافآت والنقاط</p>
+        </div>
+      </div>
+      <nav class="nav" id="nav">
+        <button class="active" data-section="overview"><span class="num">0</span> لوحة البداية</button>
+        <button data-section="presentation"><span class="num">★</span> عرض الشريك بالشركة</button>
+        <button data-section="admin"><span class="num">🔐</span> Admin</button>
+        <button data-section="stores"><span class="num">1</span> المتاجر والمنتجات</button>
+        <button data-section="settings"><span class="num">2</span> إعدادات النقاط</button>
+        <button data-section="volume"><span class="num">3</span> حجم العمليات</button>
+        <button data-section="matrix"><span class="num">4</span> مصفوفة انتقال النقاط</button>
+        <button data-section="dashboard"><span class="num">5</span> السيناريوهات والنتائج</button>
+        <button data-section="profit"><span class="num">6</span> ربح شركتي</button>
+        <button data-section="evaluation"><span class="num">7</span> تقييم المتاجر</button>
+        <button data-section="pitch"><span class="num">8</span> Partner Pitch</button>
+        <button data-section="stress"><span class="num">9</span> Stress Test</button>
+        <button data-section="library"><span class="num">10</span> مكتبة السيناريوهات</button>
+        <button data-section="cloud"><span class="num">☁</span> Firebase Cloud</button>
+        <button data-section="partner"><span class="num">11</span> تقرير الشريك</button>
+        <button data-section="ai"><span class="num">AI</span> التحليل الذكي</button>
+      </nav>
+      <div class="side-card">
+        <h3>الفكرة ببساطة</h3>
+        <p>النظام يحسب كيف تتحرك النقاط بين المتاجر، ويُظهر أفضل/أسوأ سيناريو مع توصية Push Campaign لكل متجر.</p>
+      </div>
+    </aside>
+
+    <main class="content">
+      <div class="topbar">
+        <button class="btn mobile-toggle" onclick="toggleSidebar()">☰ القائمة</button>
+        <div class="title">
+          <h2 id="pageTitle">لوحة البداية</h2>
+          <p id="pageSub">ابدأ بإدخال المتاجر، ثم اضبط النقاط، وبعدها املأ المصفوفة وشاهد السيناريوهات.</p>
+        </div>
+        <div class="actions">
+          <button class="btn primary" onclick="showSection('cloud')">☁ مزامنة تلقائية</button>
+          <button class="btn" onclick="showSection('presentation')">عرض الشريك</button>
+          <button class="btn good" onclick="toggleLanguage()" id="langToggle">English</button>
+          <button class="btn warn" onclick="document.getElementById('jsonImport').click()">استيراد JSON</button>
+          <button class="btn" onclick="exportJSON()">تصدير JSON</button>
+          <input type="file" id="jsonImport" accept="application/json" class="hidden" onchange="importJSON(event)">
+        </div>
+      </div>
+
+      <section id="overview" class="section active">
+        <div class="kpis" id="kpiRow"></div>
+        <div class="grid two">
+          <div class="card">
+            <h3>كيف تستخدم النسخة الأولى؟</h3>
+            <p class="hint">النسخة الحالية مهيأة للحفظ السحابي عبر Firebase، مع عرض شريك وصفحة Admin لإدارة الدراسة والبيانات.</p>
+            <div class="pill-row">
+              <span class="pill">إدخال متاجر</span>
+              <span class="pill">حسابات تلقائية</span>
+              <span class="pill">Matrix دقيقة</span>
+              <span class="pill">Best / Expected / Worst</span>
+              <span class="pill">AI Prompt</span>
+            </div>
+            <div class="notice good">
+              المكافآت محسوبة من عمولة شركتك فقط. العميل يكسب نقاطاً جديدة فقط على الجزء المدفوع نقداً، وليس على الجزء المدفوع بالنقاط.
+            </div>
+            <div class="sep"></div>
+            <div class="actions">
+              <button class="btn primary" onclick="showSection('stores')">ابدأ بإدخال المتاجر</button>
+              <button class="btn" onclick="addDemoData()">تعبئة مثال تجريبي</button>
+              <button class="btn good" onclick="addAssumedMarketData()">تحميل بيانات افتراضية موسعة</button>
+              <button class="btn danger" onclick="resetAll()">مسح كل البيانات</button>
+            </div>
+          </div>
+          <div class="card">
+            <h3>منطق النظام</h3>
+            <p class="hint">المعادلات الأساسية المستخدمة في المحاكاة:</p>
+            <div class="notice">
+              <b>عمولة الشركة</b> = سعر المنتج × نسبة العمولة<br>
+              <b>مكافأة العميل</b> = عمولة الشركة × نسبة المكافأة من العمولة<br>
+              <b>النقاط الجديدة</b> = المبلغ المدفوع نقداً × العمولة × نسبة المكافأة ÷ قيمة النقطة<br>
+              <b>صافي تدفق النقاط</b> = النقاط الصادرة من المتجر - النقاط المصروفة عنده
+            </div>
+          </div>
+        </div>
+        <div class="overview-modern">
+          <div class="card overview-panel">
+            <div class="overview-card-head">
+              <div>
+                <h3>ملخص سريع</h3>
+                <p class="hint">قراءة سريعة لحركة النقاط بدل الرسم المضغوط: من يصدر نقاط، من يستقبل صرف، وأين يظهر الخطر.</p>
+              </div>
+              <span class="pill">Expected Scenario</span>
+            </div>
+            <div id="overviewQuickCards" class="overview-quick-cards"></div>
+            <div id="overviewFlowList" class="overview-flow-list"></div>
+          </div>
+          <div class="card overview-panel">
+            <div class="overview-card-head">
+              <div>
+                <h3>أهم التوصيات الحالية</h3>
+                <p class="hint">أعلى المتاجر أولوية بناءً على Risk Score وصافي تدفق النقاط.</p>
+              </div>
+              <button class="btn small primary" onclick="showSection('dashboard')">فتح السيناريوهات</button>
+            </div>
+            <div id="overviewRecommendations" class="overview-recs"></div>
+          </div>
+        </div>
+        <div class="overview-next-actions">
+          <div class="step-card"><b>1) راجع المدخلات</b><p>تأكد من العمولة، مكافأة العميل، وحجم العمليات لكل متجر.</p></div>
+          <div class="step-card"><b>2) احسب Matrix تلقائياً</b><p>استخدم الحساب الذكي ثم عدّل يدوياً أي متجر حسب الواقع.</p></div>
+          <div class="step-card"><b>3) اعرض Partner View</b><p>جهّز تقرير مبسط لإقناع كل شريك بدون تفاصيل داخلية حساسة.</p></div>
+        </div>
+      </section>
+
+      <section id="stores" class="section">
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap">
+            <div>
+              <h3>المتاجر والمنتجات</h3>
+              <p class="hint">أدخل بيانات الاتفاق مع كل متجر. الحسابات المالية ستظهر تلقائياً.</p>
+            </div>
+            <div class="actions">
+              <button class="btn primary" onclick="addStore()">+ إضافة متجر</button>
+              <button class="btn" onclick="duplicateLastStore()">نسخ آخر متجر</button>
+              <button class="btn good" onclick="exportStoresCSV()">تصدير CSV</button>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table class="table" id="storesTable"></table>
+          </div>
+          <p class="footer-note">ملاحظة: “التحمل الظاهري” يساوي العمولة + المكافأة، بينما “التحمل الفعلي للمتجر” هو العمولة فقط إذا كانت المكافأة من عمولة شركتك.</p>
+        </div>
+      </section>
+
+      <section id="settings" class="section">
+        <div class="grid two">
+          <div class="card">
+            <h3>إعدادات النقاط العامة</h3>
+            <p class="hint">هذه الإعدادات تتحكم في كل الحسابات. يمكنك تعديلها بأي وقت وستتغير النتائج مباشرة.</p>
+            <div class="form-grid">
+              <div class="field"><label>قيمة النقطة بالدينار</label><input type="number" step="0.01" min="0.01" id="pointValue" onchange="updateSettings()"></div>
+              <div class="field"><label>أقصى نسبة دفع بالنقاط %</label><input type="number" step="1" min="0" max="100" id="globalCap" onchange="updateSettings()"></div>
+              <div class="field"><label>متوسط استخدام الحد الأقصى %</label><input type="number" step="1" min="0" max="100" id="redemptionUtil" onchange="updateSettings()"></div>
+              <div class="field"><label>نسبة تفعيل النقاط خلال الفترة %</label><input type="number" step="1" min="0" max="100" id="circulationRate" onchange="updateSettings()"></div>
+              <div class="field"><label>ضغط أسوأ سيناريو %</label><input type="number" step="1" min="0" max="100" id="worstStress" onchange="updateSettings()"></div>
+              <div class="field"><label>تحسن أفضل سيناريو %</label><input type="number" step="1" min="0" max="100" id="bestRelief" onchange="updateSettings()"></div>
+            </div>
+            <div class="sep"></div>
+            <div class="notice warn">
+              <b>تفسير مهم:</b> لو سعر السلعة 200 دينار والحد 50%، فالعميل يستطيع استخدام نقاط بقيمة 100 دينار كحد أقصى، ويدفع الباقي نقداً/بطاقة. النقاط الجديدة تُحسب على المبلغ النقدي فقط.
+            </div>
+          </div>
+          <div class="card">
+            <h3>اختبار عملية واحدة</h3>
+            <p class="hint">استخدم هذا المثال السريع لفهم أثر الإعدادات على عملية بيع واحدة.</p>
+            <div class="form-grid">
+              <div class="field"><label>سعر السلعة</label><input type="number" id="testPrice" value="200" oninput="renderTestCalc()"></div>
+              <div class="field"><label>نسبة العمولة %</label><input type="number" id="testCommission" value="10" oninput="renderTestCalc()"></div>
+              <div class="field"><label>مكافأة من العمولة %</label><input type="number" id="testReward" value="50" oninput="renderTestCalc()"></div>
+            </div>
+            <div id="testCalc" style="margin-top:14px"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="volume" class="section">
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap">
+            <div>
+              <h3>حجم العمليات المتوقع</h3>
+              <p class="hint">هذه الصفحة تعطي وزن واقعي لكل متجر. كلما زاد حجم العمليات والمبيعات، زاد تأثيره على حركة النقاط.</p>
+            </div>
+            <div class="actions">
+              <button class="btn" onclick="syncVolumeWithStores()">تحديث من قائمة المتاجر</button>
+              <button class="btn good" onclick="exportVolumeCSV()">تصدير CSV</button>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table class="table" id="volumeTable"></table>
+          </div>
+        </div>
+      </section>
+
+      <section id="matrix" class="section">
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap">
+            <div>
+              <h3>مصفوفة انتقال النقاط</h3>
+              <p class="hint">كل صف يمثل النقاط المكتسبة من متجر معيّن. يجب أن يكون مجموع كل صف 100%.</p>
+            </div>
+            <div class="actions">
+              <button class="btn good" onclick="buildSmartMatrix()">✨ احسب الاحتمالات تلقائيًا</button>
+              <button class="btn ghost" onclick="showSmartMatrixDetails()">كيف تم الحساب؟</button>
+              <button class="btn" onclick="buildEqualMatrix()">توزيع بالتساوي</button>
+              <button class="btn primary" onclick="normalizeMatrixRows()">تعديل الصفوف إلى 100%</button>
+            </div>
+          </div>
+          <div class="notice good" style="margin-bottom:12px">
+            <b>الحساب الذكي التلقائي:</b> يقدّر احتمالية صرف النقاط في كل متجر بناءً على حجم العمليات، متوسط السلة، جاذبية الصرف، القطاع، حد صرف النقاط، ونسبة رجوع العميل لنفس المتجر. بعدها يحوّل الأوزان إلى نسب مجموع كل صف فيها 100%.
+          </div>
+          <div id="matrixNotice" class="notice" style="margin-bottom:12px"></div>
+          <div class="table-wrap">
+            <table class="table matrix-table" id="matrixTable"></table>
+          </div>
+        </div>
+      </section>
+
+      <section id="dashboard" class="section">
+        <div class="scenario-tabs dashboard-tabs">
+          <button class="active" data-scenario="expected" onclick="setScenario('expected')">Expected</button>
+          <button data-scenario="worst" onclick="setScenario('worst')">Worst</button>
+          <button data-scenario="best" onclick="setScenario('best')">Best</button>
+        </div>
+
+        <div class="card dashboard-hero" style="margin-bottom:16px">
+          <div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap;position:relative;z-index:1">
+            <div>
+              <h3 style="font-size:22px;margin-bottom:6px">ملخص السيناريو</h3>
+              <p class="hint">تصميم أوضح: مؤشرات كبيرة، مقارنة Issued/Redeemed لكل متجر، وخريطة خطر قابلة للقراءة.</p>
+            </div>
+            <div class="actions">
+              <button class="btn good" onclick="exportResultsCSV()">تصدير النتائج CSV</button>
+              <button class="btn" onclick="window.print()">طباعة / PDF</button>
+            </div>
+          </div>
+          <div class="kpis" id="dashboardKpis" style="position:relative;z-index:1;margin-top:14px;margin-bottom:0"></div>
+        </div>
+
+        <div class="dashboard-grid">
+          <div class="card dashboard-panel">
+            <div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap">
+              <div>
+                <h3>Issued vs Redeemed</h3>
+                <p class="hint">كل متجر يظهر كنموذج واضح: النقاط الصادرة مقابل النقاط المصروفة لديه.</p>
+              </div>
+              <span class="pill">القيم بالدينار المكافئ للنقاط</span>
+            </div>
+            <div id="dashboardBars" class="smart-chart"></div>
+          </div>
+          <div class="card dashboard-panel">
+            <h3>Risk Map</h3>
+            <p class="hint">الخطر يزيد عندما يصير المتجر مركز صرف نقاط أكثر من كونه مصدر إصدار نقاط.</p>
+            <div id="riskVisual" class="smart-chart"></div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:16px">
+          <div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap">
+            <div>
+              <h3>نتائج المتاجر التفصيلية</h3>
+              <p class="hint">النتيجة السالبة تعني أن المتجر يستقبل صرف نقاط أكثر مما يصدر.</p>
+            </div>
+            <button class="btn primary" onclick="showSection('profit')">افتح صفحة ربح شركتي</button>
+          </div>
+          <div class="table-wrap">
+            <table class="table" id="resultsTable"></table>
+          </div>
+        </div>
+        <div class="card" style="margin-top:16px">
+          <h3>التوصيات التنفيذية</h3>
+          <div id="recommendations" class="recommend"></div>
+        </div>
+      </section>
+
+      <section id="profit" class="section">
+        <div class="scenario-tabs dashboard-tabs">
+          <button class="active" data-scenario="expected" onclick="setScenario('expected')">Expected</button>
+          <button data-scenario="worst" onclick="setScenario('worst')">Worst</button>
+          <button data-scenario="best" onclick="setScenario('best')">Best</button>
+        </div>
+        <div class="profit-note warn" style="margin-bottom:14px">
+          <b>ملاحظة مهمة:</b> هذه الصفحة تحسب ربح برنامج النقاط قبل مصاريف التشغيل، بوابة الدفع، الضرائب، أو أي تكاليف تشغيلية أخرى. الهدف هو معرفة هل عمولة الشركة تغطي تكلفة المكافآت وتعويضات النقاط.
+        </div>
+        <div id="profitKpis" class="profit-cards"></div>
+        <div class="profit-grid">
+          <div class="card">
+            <h3>Profit Waterfall</h3>
+            <p class="hint">يوضح الطريق من إجمالي عمولة الشركة إلى صافي الربح المتوقع.</p>
+            <div id="profitWaterfall" class="profit-waterfall"></div>
+          </div>
+          <div class="card">
+            <h3>تفسير سريع</h3>
+            <div id="profitExplanation" class="profit-explain"></div>
+          </div>
+        </div>
+        <div class="card" style="margin-top:16px">
+          <div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap">
+            <div>
+              <h3>ربح شركتي حسب المتجر</h3>
+              <p class="hint">يساعدك تعرف أي متجر يعطيك أفضل صافي بعد المكافآت، وأي متجر يحتاج تعديل اتفاق أو Push.</p>
+            </div>
+            <div class="actions">
+              <button class="btn good" onclick="exportProfitCSV()">تصدير ربح الشركة CSV</button>
+              <button class="btn" onclick="window.print()">طباعة / PDF</button>
+            </div>
+          </div>
+          <div class="table-wrap"><table class="table profit-table" id="profitTable"></table></div>
+        </div>
+      </section>
+
+
+
+      <section id="evaluation" class="section">
+        <div class="scenario-tabs dashboard-tabs">
+          <button class="active" data-scenario="expected" onclick="setScenario('expected')">Expected</button>
+          <button data-scenario="worst" onclick="setScenario('worst')">Worst</button>
+          <button data-scenario="best" onclick="setScenario('best')">Best</button>
+        </div>
+        <div class="card decision-hero" style="margin-bottom:16px">
+          <div style="position:relative;z-index:1">
+            <h3 style="font-size:24px;margin-bottom:6px">قرار التعاقد مع كل متجر</h3>
+            <p class="hint">هاي الصفحة تحول الأرقام إلى قرار تجاري: هل المتجر مفيد للنظام؟ وهل عمولته كافية؟ وهل يحتاج شروط خاصة؟</p>
+            <div id="evaluationKpis" class="decision-grid" style="margin-top:16px"></div>
+          </div>
+        </div>
+        <div class="grid two">
+          <div class="card">
+            <h3>أهم الإشارات التجارية</h3>
+            <div id="evaluationInsights" class="insight-list"></div>
+          </div>
+          <div class="card">
+            <h3>Break-even Commission</h3>
+            <p class="hint">أقل عمولة تقريبية يجب أن تغطي تكلفة النقاط/التعويض حتى لا تصبح الصفقة خاسرة قبل مصاريف التشغيل.</p>
+            <div id="breakEvenCards" class="insight-list"></div>
+          </div>
+        </div>
+        <div class="card" style="margin-top:16px">
+          <div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap">
+            <div>
+              <h3>جدول القرار التجاري</h3>
+              <p class="hint">القرار مبني على صافي ربح الشركة، مستوى الخطر، جاذبية المتجر، وحجم العمليات.</p>
+            </div>
+            <button class="btn good" onclick="exportEvaluationCSV()">تصدير تقييم المتاجر CSV</button>
+          </div>
+          <div class="table-wrap"><table class="table" id="evaluationTable"></table></div>
+        </div>
+      </section>
+
+      <section id="pitch" class="section">
+        <div class="pitch-wrap">
+          <div class="card">
+            <h3>إعداد Partner Pitch</h3>
+            <p class="hint">اختر متجرًا، والنظام يجهز صفحة عرض مختصرة للشريك، تركز على القيمة، أفضل/أسوأ سيناريو، وكيف نعالج المخاطر.</p>
+            <div class="form-grid" style="grid-template-columns:1fr">
+              <div class="field"><label>اختر المتجر</label><select id="pitchStore" onchange="renderPartnerPitch()"></select></div>
+              <div class="field"><label>السيناريو</label><select id="pitchScenario" onchange="renderPartnerPitch()"><option value="expected">Expected</option><option value="worst">Worst</option><option value="best">Best</option></select></div>
+              <div class="field"><label>الرسالة الرئيسية</label><textarea id="pitchMessage" oninput="renderPartnerPitch(true)">النظام لا يضيف خصماً عشوائياً على المتجر؛ هو يحول جزءاً من عمولة المنصة إلى حافز يرفع تكرار الشراء ويعيد العملاء للتطبيق.</textarea></div>
+            </div>
+            <div class="actions" style="margin-top:12px">
+              <button class="btn primary" onclick="renderPartnerPitch()">تحديث العرض</button>
+              <button class="btn" onclick="copyPitchText()">نسخ النص</button>
+              <button class="btn good" onclick="window.print()">طباعة / PDF</button>
+            </div>
+          </div>
+          <div class="pitch-preview" id="pitchPreview"></div>
+        </div>
+        <div class="card" style="margin-top:16px">
+          <h3>نص جاهز للاجتماع</h3>
+          <div id="pitchText" class="copy-box"></div>
+        </div>
+      </section>
+
+      <section id="stress" class="section">
+        <div class="card decision-hero" style="margin-bottom:16px">
+          <div style="position:relative;z-index:1">
+            <h3 style="font-size:24px;margin-bottom:6px">Stress Test سريع</h3>
+            <p class="hint">غيّر الافتراضات وشاهد أثرها فوراً على ربح الشركة، النقاط المصروفة، وعدد المتاجر عالية الخطر.</p>
+          </div>
+        </div>
+        <div class="card">
+          <h3>افتراضات الاختبار</h3>
+          <div class="stress-controls">
+            <div class="slider-field"><label>حد صرف النقاط <b id="stressCapVal"></b></label><input id="stressCap" type="range" min="10" max="80" step="1" value="50" oninput="renderStressTest(true)"></div>
+            <div class="slider-field"><label>استخدام الحد المتاح <b id="stressUtilVal"></b></label><input id="stressUtil" type="range" min="20" max="100" step="1" value="80" oninput="renderStressTest(true)"></div>
+            <div class="slider-field"><label>النقاط التي تدخل التداول <b id="stressCircVal"></b></label><input id="stressCirc" type="range" min="20" max="100" step="1" value="75" oninput="renderStressTest(true)"></div>
+            <div class="slider-field"><label>تعديل المكافآت <b id="stressRewardVal"></b></label><input id="stressReward" type="range" min="-50" max="80" step="5" value="0" oninput="renderStressTest(true)"></div>
+            <div class="slider-field"><label>تعديل حجم العمليات <b id="stressTxVal"></b></label><input id="stressTx" type="range" min="-40" max="80" step="5" value="0" oninput="renderStressTest(true)"></div>
+            <div class="slider-field"><label>ضغط Worst Case <b id="stressWorstVal"></b></label><input id="stressWorst" type="range" min="0" max="80" step="1" value="35" oninput="renderStressTest(true)"></div>
+          </div>
+        </div>
+        <div class="stress-grid" style="margin-top:16px">
+          <div class="card">
+            <h3>مقارنة مع الوضع الحالي</h3>
+            <div id="stressComparison" class="scenario-compare"></div>
+          </div>
+          <div class="card">
+            <h3>أعلى المتاجر تأثراً</h3>
+            <div id="stressRiskList" class="insight-list"></div>
+          </div>
+        </div>
+        <div class="card" style="margin-top:16px">
+          <h3>توصية بعد الاختبار</h3>
+          <div id="stressAdvice" class="notice good"></div>
+        </div>
+      </section>
+
+
+
+      <section id="library" class="section">
+        <div class="card library-hero" style="margin-bottom:16px">
+          <div style="position:relative;z-index:1">
+            <h3 style="font-size:26px;margin-bottom:6px">Scenario Library</h3>
+            <p class="hint">احفظ أكثر من دراسة، قارن الربحية والخطر، وقرر أفضل تركيبة متاجر تبدأ فيها.</p>
+            <div id="libraryKpis" class="kpis" style="margin-top:16px"></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>حفظ أو بناء سيناريو جديد</h3>
+          <p class="hint">احفظ الوضع الحالي كدراسة مستقلة، أو خلي النظام يبني لك سيناريوهات افتراضية للمقارنة.</p>
+          <div class="library-toolbar">
+            <div class="field"><label>اسم السيناريو</label><input id="scenarioName" placeholder="مثلاً: إطلاق أولي - مطاعم وأزياء"></div>
+            <div class="field"><label>نوع الحساب للحفظ</label><select id="scenarioTypeToSave"><option value="expected">Expected</option><option value="worst">Worst</option><option value="best">Best</option></select></div>
+            <div class="actions">
+              <button class="btn primary" onclick="saveCurrentScenarioToLibrary()">حفظ السيناريو الحالي</button>
+              <button class="btn good" onclick="generateSuggestedScenarios()">بناء سيناريوهات مقترحة</button>
+              <button class="btn" onclick="exportScenarioLibrary()">تصدير Library</button>
+              <button class="btn danger" onclick="clearScenarioLibrary()">مسح المكتبة</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid two" style="margin-top:16px">
+          <div class="card">
+            <h3>أفضل السيناريوهات المقترحة</h3>
+            <div id="libraryRecommendations" class="recommendation-board"></div>
+          </div>
+          <div class="card">
+            <h3>خريطة القرار الحالية</h3>
+            <p class="hint">تصنيف متاجر الدراسة الحالية حسب قرار التعاقد.</p>
+            <div id="currentDecisionMap" class="decision-map"></div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:16px">
+          <div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap">
+            <div>
+              <h3>مقارنة السيناريوهات</h3>
+              <p class="hint">قارن صافي ربح شركتك، مستوى الخطر، عدد المتاجر، والقرار الاستراتيجي لكل سيناريو محفوظ.</p>
+            </div>
+            <button class="btn good" onclick="exportScenarioComparisonCSV()">تصدير مقارنة CSV</button>
+          </div>
+          <div class="table-wrap"><table class="table" id="libraryTable"></table></div>
+        </div>
+
+        <div class="card" style="margin-top:16px">
+          <h3>بطاقات السيناريوهات</h3>
+          <div id="scenarioCards" class="scenario-cards"></div>
+        </div>
+      </section>
+
+
+
+
+      <section id="presentation" class="section">
+        <div class="card presentation-hero" style="margin-bottom:16px">
+          <span class="mode-pill">Partner Presentation</span>
+          <h3 id="presTitle">Dealit Reward Flow — عرض الشريك بالشركة</h3>
+          <p class="hint" id="presSub">صفحة مخصصة لشرح الفكرة للشريك الداخلي: كيف نكسب، كيف نحمي المتاجر، وكيف نقرر أفضل القطاعات للإطلاق.</p>
+          <div class="actions" style="margin-top:14px">
+            <button class="btn good" onclick="window.print()">طباعة / PDF</button>
+            <button class="btn" onclick="copyCompanyPitch()">نسخ ملخص العرض</button>
+            <button class="btn" onclick="showSection('admin')">دخول Admin</button>
+          </div>
+        </div>
+        <div class="pitch-grid" id="companyPitchKpis"></div>
+        <div class="grid two" style="margin-top:16px">
+          <div class="card">
+            <h3 id="businessModelTitle">نموذج الربح</h3>
+            <p class="hint" id="businessModelText">الشركة تأخذ العمولة على السعر الأصلي، وتخصص جزءاً من العمولة كمكافآت للعميل. المتجر يستفيد من traffic إضافي، والشركة تدير توازن النقاط بين المتاجر.</p>
+            <div class="notice good" id="businessModelNotice">النقاط لا تولّد نقاطاً جديدة إلا على المبلغ المدفوع نقداً، وهذا يقلل تضخم المكافآت ويحافظ على استدامة النظام.</div>
+          </div>
+          <div class="card">
+            <h3 id="partnerProtectionTitle">حماية الشركاء</h3>
+            <p class="hint" id="partnerProtectionText">إذا ظهر متجر يستقبل نقاطاً أكثر مما يصدر، النظام يوصي بتدخلات Push Campaign أو تعديل حد صرف النقاط أو إعادة توزيع العروض.</p>
+            <div id="presentationRecommendations" class="recommend"></div>
+          </div>
+        </div>
+        <div class="card" style="margin-top:16px">
+          <h3 id="flowTitle">كيف تعمل دورة النقاط؟</h3>
+          <div class="flow-steps">
+            <div class="flow-step"><div class="stepnum">1</div><h4>شراء</h4><p>العميل يشتري من متجر مشترك ويدفع نقداً أو جزئياً بالنقاط.</p></div>
+            <div class="flow-step"><div class="stepnum">2</div><h4>اكتساب</h4><p>النقاط الجديدة تُحسب فقط على المبلغ المدفوع نقداً.</p></div>
+            <div class="flow-step"><div class="stepnum">3</div><h4>صرف</h4><p>العميل يستطيع صرف النقاط في متجر آخر ضمن حد صرف محدد.</p></div>
+            <div class="flow-step"><div class="stepnum">4</div><h4>توازن</h4><p>المصفوفة والخوارزمية تكشف الخطر وتقترح Push لإعادة التوازن.</p></div>
+          </div>
+        </div>
+        <div class="card" style="margin-top:16px">
+          <h3 id="launchDecisionTitle">قرار الإطلاق المقترح</h3>
+          <div id="launchDecisionBoard" class="decision-map"></div>
+        </div>
+      </section>
+
+      <section id="admin" class="section">
+        <div id="adminLogin" class="card admin-lock">
+          <h3>Admin Login</h3>
+          <p class="hint">أدخل كلمة المرور للوصول إلى صفحة الإدارة.</p>
+          <div class="field"><label>Password</label><input id="adminPassword" type="password" placeholder="Enter password" onkeydown="if(event.key==='Enter') unlockAdmin()"></div>
+          <div class="actions" style="margin-top:12px"><button class="btn primary" onclick="unlockAdmin()">دخول</button><button class="btn" onclick="showSection('presentation')">رجوع للعرض</button></div>
+          <div class="footer-note">تنبيه: هذه حماية واجهة داخل ملف HTML وليست بديلاً عن تسجيل دخول حقيقي وقواعد Firebase محكمة.</div>
+        </div>
+        <div id="adminPanel" class="hidden">
+          <div class="card presentation-hero" style="margin-bottom:16px">
+            <span class="mode-pill">Admin Mode</span>
+            <h3>لوحة الإدارة</h3>
+            <p class="hint">إدارة البيانات، الحفظ السحابي، السيناريوهات، وتصدير الملفات من مكان واحد.</p>
+            <div class="actions" style="margin-top:14px"><button class="btn" onclick="lockAdmin()">قفل الصفحة</button><button class="btn good" onclick="toggleLanguage()">English / عربي</button></div>
+          </div>
+          <div class="admin-grid">
+            <div class="admin-tile"><span class="admin-badge">Firebase</span><h4>الحفظ السحابي</h4><p>احفظ أو حمّل الدراسات من Firestore.</p><button class="btn primary" onclick="showSection('cloud')">فتح Firebase</button></div>
+            <div class="admin-tile"><span class="admin-badge">Data</span><h4>المتاجر والبيانات</h4><p>إضافة، تعديل، أو حذف بيانات المتاجر.</p><button class="btn" onclick="showSection('stores')">إدارة المتاجر</button></div>
+            <div class="admin-tile"><span class="admin-badge">Matrix</span><h4>الاحتمالات</h4><p>حساب أو تعديل مصفوفة انتقال النقاط.</p><button class="btn" onclick="showSection('matrix')">فتح Matrix</button></div>
+            <div class="admin-tile"><span class="admin-badge">Scenarios</span><h4>السيناريوهات</h4><p>حفظ ومقارنة سيناريوهات الإطلاق.</p><button class="btn" onclick="showSection('library')">مكتبة السيناريوهات</button></div>
+            <div class="admin-tile"><span class="admin-badge">Profit</span><h4>ربح شركتي</h4><p>تحليل الربحية والتعويض والتكلفة.</p><button class="btn" onclick="showSection('profit')">فتح الربحية</button></div>
+            <div class="admin-tile"><span class="admin-badge">Backup</span><h4>نسخ احتياطي</h4><p>تصدير JSON أو CSV للدراسة الحالية.</p><button class="btn good" onclick="exportJSON()">تصدير JSON</button></div>
+            <div class="admin-tile"><span class="admin-badge">Stress</span><h4>اختبار الضغط</h4><p>اختبر تأثير تغيير الصرف والعمليات والمكافآت.</p><button class="btn" onclick="showSection('stress')">Stress Test</button></div>
+            <div class="admin-tile"><span class="admin-badge">Pitch</span><h4>عرض الشريك</h4><p>صفحة جاهزة للمناقشة الداخلية.</p><button class="btn" onclick="showSection('presentation')">فتح العرض</button></div>
+            <div class="admin-tile"><span class="admin-badge">Reset</span><h4>إعادة ضبط</h4><p>مسح البيانات الحالية وإعادة البدء.</p><button class="btn danger" onclick="resetAll()">مسح البيانات</button></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="cloud" class="section">
+        <div class="card cloud-hero" style="margin-bottom:16px">
+          <div style="position:relative;z-index:1">
+            <div class="cloud-status">
+              <span id="cloudStatusDot" class="cloud-dot"></span>
+              <span id="cloudStatusText" class="sync-chip">جاري تجهيز الاتصال مع Firebase...</span>
+            </div>
+            <h3 style="font-size:28px;margin:14px 0 6px">Firebase Auto Sync</h3>
+            <p class="hint">أي تعديل على المتاجر أو الإعدادات أو المصفوفة يتم حفظه تلقائياً على Cloud Firestore، وعند فتح الملف من أي جهاز يتم تحميل آخر دراسة تلقائياً.</p>
+          </div>
+        </div>
+
+        <div class="cloud-card-grid">
+          <div class="card">
+            <h3>الدراسة الحالية — حفظ تلقائي</h3>
+            <p class="hint">لا تحتاج تضغط حفظ. النظام يحفظ تلقائياً بعد أي تعديل، ويستخدم ملفاً رئيسياً ثابتاً داخل Firebase باسم current_study.</p>
+            <div class="cloud-actions">
+              <div class="field"><label>اسم الدراسة</label><input id="cloudScenarioName" placeholder="مثلاً: Launch Study - June" onchange="window.scheduleCloudAutosave && window.scheduleCloudAutosave('name')" /></div>
+              <button class="btn primary" onclick="window.forceCloudSync()">مزامنة الآن</button>
+              <button class="btn" onclick="window.refreshFirebaseScenarios()">تحديث القائمة</button>
+            </div>
+            <div class="sep"></div>
+            <div class="notice good">
+              تم تفعيل Auto Sync: أي إدخال أو تعديل يتم رفعه تلقائياً إلى Firebase بعد ثوانٍ قليلة. تصدير JSON يبقى فقط كنسخة احتياطية.
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>قبل التشغيل لأول مرة</h3>
+            <p class="hint">لازم تكون Cloud Firestore مفعّلة في Firebase Console. Analytics غير مطلوب لهذا النظام الداخلي.</p>
+            <div class="notice warn">
+              لو ظهر خطأ Permission denied، المشكلة غالباً من Firestore Security Rules، وليس من كود HTML.
+            </div>
+            <div class="sep"></div>
+            <button class="btn" onclick="window.showFirestoreRules()">عرض Rules مؤقتة للتجربة</button>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:16px">
+          <div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap">
+            <div>
+              <h3>الدراسات المحفوظة على Firebase</h3>
+              <p class="hint">يتم تحميل الدراسة الرئيسية تلقائياً عند فتح التطبيق. يمكن استخدام Load فقط للرجوع إلى نسخة محفوظة أو اختبارية.</p>
+            </div>
+            <button class="btn good" onclick="window.exportFirebaseListCSV()">تصدير قائمة Firebase CSV</button>
+          </div>
+          <div class="table-wrap"><table class="table" id="cloudTable"></table></div>
+        </div>
+      </section>
+
+      <section id="partner" class="section">
+        <div class="grid two">
+          <div class="card">
+            <h3>Partner View</h3>
+            <p class="hint">اختر متجرًا لعرض تقرير مختصر ومقنع للشريك، يوضح أفضل/أسوأ سيناريو بدون تفاصيل داخلية زائدة.</p>
+            <div class="form-grid">
+              <div class="field"><label>اختر المتجر</label><select id="partnerStore" onchange="renderPartnerView()"></select></div>
+              <div class="field"><label>السيناريو</label><select id="partnerScenario" onchange="renderPartnerView()"><option value="expected">Expected</option><option value="worst">Worst</option><option value="best">Best</option></select></div>
+              <div class="field"><label>مدة العرض</label><select id="partnerPeriod" onchange="renderPartnerView()"><option>شهري</option><option>أسبوعي</option><option>ربع سنوي</option></select></div>
+            </div>
+            <div class="sep"></div>
+            <div class="actions">
+              <button class="btn primary" onclick="renderPartnerView()">تحديث التقرير</button>
+              <button class="btn" onclick="copyPartnerReport()">نسخ النص</button>
+              <button class="btn good" onclick="window.print()">طباعة / PDF</button>
+            </div>
+            <div class="notice warn" style="margin-top:14px">
+              الهدف من التقرير هو الإقناع التجاري: المتجر لا يتحمل النقاط كنقص نهائي، لأن الشركة تعوض قيمة النقاط المصروفة، والخطر الحقيقي هو انخفاض الشراء النقدي إذا صار المتجر مركز صرف فقط.
+            </div>
+          </div>
+          <div class="card">
+            <h3>ملخص المتجر</h3>
+            <div id="partnerMiniKpis" class="kpis" style="grid-template-columns:repeat(2,1fr)"></div>
+          </div>
+        </div>
+        <div class="card" style="margin-top:16px">
+          <div id="partnerReport"></div>
+        </div>
+      </section>
+
+      <section id="ai" class="section">
+        <div class="grid two">
+          <div class="card">
+            <h3>AI Analysis</h3>
+            <p class="hint">يمكنك نسخ الـ prompt إلى ChatGPT Plus أو Gemini Pro. أو جرّب Gemini API محلياً إذا وضعت API Key. لا يتم حفظ المفتاح إلا إذا اخترت ذلك.</p>
+            <div class="notice warn">
+              تشغيل Gemini مباشرة من HTML مناسب للتجربة المحلية فقط. عند النشر الحقيقي يجب استخدام Backend لإخفاء المفتاح.
+            </div>
+            <div class="form-grid" style="margin-top:12px">
+              <div class="field"><label>Gemini API Key اختياري</label><input type="password" id="geminiKey" placeholder="ضع المفتاح هنا للتجربة المحلية فقط"></div>
+              <div class="field"><label>Model</label><input type="text" id="geminiModel" value="gemini-3.5-flash"></div>
+              <div class="field"><label>لغة التحليل</label><select id="aiLanguage"><option value="Arabic">Arabic</option><option value="English">English</option></select></div>
+            </div>
+            <div class="pill-row">
+              <label class="pill"><input type="checkbox" id="saveKey"> حفظ المفتاح محلياً على هذا الجهاز</label>
+            </div>
+            <div class="actions">
+              <button class="btn primary" onclick="generatePrompt()">توليد Prompt</button>
+              <button class="btn" onclick="copyPrompt()">نسخ Prompt</button>
+              <button class="btn good" onclick="runGeminiAnalysis()">تشغيل Gemini</button>
+            </div>
+            <div class="sep"></div>
+            <div class="field"><label>Prompt جاهز</label><textarea id="aiPrompt" class="ltr"></textarea></div>
+          </div>
+          <div class="card">
+            <h3>النتيجة الذكية</h3>
+            <div id="aiOutput" class="ai-output">اضغط “توليد Prompt” ثم انسخه إلى ChatGPT/Gemini، أو ضع Gemini API Key وشغّل التحليل من هنا.</div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <div class="modal-backdrop" id="modal"><div class="modal"><h3 id="modalTitle"></h3><div id="modalBody"></div><div class="actions" style="margin-top:14px"><button class="btn primary" onclick="closeModal()">إغلاق</button></div></div></div>
+
+<script>
+const STORAGE_KEY = 'reward-flow-simulator-v10-session-disabled';
+const LEGACY_STORAGE_KEY = 'reward-flow-simulator-v10-session-disabled-legacy';
+const SCENARIO_LIBRARY_KEY = 'reward-flow-simulator-scenario-library-v10-session-disabled';
+let scenarioLibrary = [];
+let currentSection = 'overview';
+let currentScenario = 'expected';
+let app = {
+  settings: {
+    pointValue: 1,
+    globalCap: 50,
+    redemptionUtil: 80,
+    circulationRate: 75,
+    worstStress: 35,
+    bestRelief: 35
+  },
+  stores: [],
+  volume: {},
+  matrix: {}
+};
+
+const sectors = ['مطاعم','أزياء','إلكترونيات','صيدليات','سوبرماركت','تجميل','أطفال','خدمات','ترفيه','تعليم','أخرى'];
+const titles = {
+  overview:['لوحة البداية','ابدأ بإدخال المتاجر، ثم اضبط النقاط، وبعدها املأ المصفوفة وشاهد السيناريوهات.'],
+  presentation:['عرض الشريك بالشركة','صفحة عرض داخلية لشريكك في الشركة تشرح النموذج والربحية وحماية المتاجر.'],
+  admin:['Admin','صفحة إدارة محمية بكلمة مرور لإدارة الدراسة والبيانات.'],
+  stores:['المتاجر والمنتجات','أدخل بيانات الاتفاق مع كل متجر أو منتج.'],
+  settings:['إعدادات النقاط','تحكم بقيمة النقطة وحد صرف النقاط وسلوك السيناريوهات.'],
+  volume:['حجم العمليات','حدد حجم المبيعات المتوقع لكل متجر حتى تصبح المحاكاة واقعية.'],
+  matrix:['مصفوفة انتقال النقاط','حدد أين يتوقع أن تُصرف النقاط المكتسبة من كل متجر.'],
+  dashboard:['السيناريوهات والنتائج','شاهد صافي حركة النقاط ومستوى الخطر والتوصيات.'],
+  profit:['ربح شركتي','احسب إجمالي عمولة الشركة وصافي الربح بعد المكافآت وتعويض النقاط.'],
+  evaluation:['تقييم المتاجر','قرار تجاري واضح لكل متجر: قبول، قبول بشروط، تفاوض، أو رفض.'],
+  pitch:['Partner Pitch','صفحة عرض مقنعة للشريك بدون إظهار تفاصيلك الداخلية الحساسة.'],
+  stress:['Stress Test','اختبر ماذا يحدث عند تغيير الصرف، المكافآت، حجم العمليات أو حد النقاط.'],
+  library:['مكتبة السيناريوهات','احفظ أكثر من دراسة، قارن بينها، واختر أفضل مزيج متاجر للإطلاق.'],
+  cloud:['Firebase Cloud','احفظ واسترجع الدراسات أونلاين باستخدام مشروع Firebase الخاص بك.'],
+  partner:['تقرير الشريك','تقرير مبسط ومقنع لكل متجر بدون كشف كل تفاصيلك الداخلية.'],
+  ai:['التحليل الذكي','ولّد تحليل مقنع أو Prompt جاهز للذكاء الاصطناعي.']
+};
+
+function uid(){return 's_' + Math.random().toString(36).slice(2,9)}
+function n(v, fallback=0){const x = Number(v); return Number.isFinite(x) ? x : fallback}
+function pct(v){return n(v)/100}
+function money(v){return `${formatNumber(v)} د.أ`}
+function points(v){return `${formatNumber(v)} نقطة`}
+function formatNumber(v){return n(v).toLocaleString('en-US',{maximumFractionDigits:2})}
+function clamp(v,min,max){return Math.min(max,Math.max(min,n(v)))}
+function escapeHtml(str){return String(str??'').replace(/[&<>'"]/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[m]))}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200)}
+function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open')}
+function closeSidebar(){document.getElementById('sidebar').classList.remove('open')}
+function openModal(title, body){
+  const m=document.getElementById('modal');
+  document.getElementById('modalTitle').innerHTML=title;
+  document.getElementById('modalBody').innerHTML=body;
+  m.classList.add('show');
+}
+function closeModal(){document.getElementById('modal').classList.remove('show')}
+
+
+let currentLang = localStorage.getItem('rfs-lang') || 'ar';
+let adminUnlocked = sessionStorage.getItem('rfs-admin') === '1';
+const ADMIN_PASSWORD = 'Azzz1990';
+const titlesEn = {
+  overview:['Overview','Start with stores, point settings, matrix, then review scenarios.'],
+  presentation:['Company Partner Presentation','Internal presentation for your business partner: model, profit, protection, and launch decision.'],
+  admin:['Admin','Password-protected management page for your study and data.'],
+  stores:['Stores & Products','Enter commercial terms for each store or product.'],
+  settings:['Point Settings','Control point value, redemption cap, and scenario behavior.'],
+  volume:['Transaction Volume','Set expected sales volume per store for realistic simulation.'],
+  matrix:['Reward Flow Matrix','Define where earned points are expected to be redeemed.'],
+  dashboard:['Scenarios & Results','Review net point flow, risk level, and recommendations.'],
+  profit:['Company Profit','Calculate commission, reward cost, compensation, and net profit.'],
+  evaluation:['Store Evaluation','Clear decision per store: accept, conditions, negotiate, or reject.'],
+  pitch:['Partner Pitch','Store-facing pitch without exposing internal details.'],
+  stress:['Stress Test','Test changes in redemption, rewards, volume, or point cap.'],
+  library:['Scenario Library','Save and compare multiple launch scenarios.'],
+  cloud:['Firebase Cloud','Save and load studies online using your Firebase project.'],
+  partner:['Partner Report','Simple report for each store without exposing sensitive details.'],
+  ai:['AI Analysis','Generate a persuasive analysis or ready AI prompt.']
+};
+const navLabelsAr = ['لوحة البداية','عرض الشريك بالشركة','Admin','المتاجر والمنتجات','إعدادات النقاط','حجم العمليات','مصفوفة انتقال النقاط','السيناريوهات والنتائج','ربح شركتي','تقييم المتاجر','Partner Pitch','Stress Test','مكتبة السيناريوهات','Firebase Cloud','تقرير الشريك','التحليل الذكي'];
+const navLabelsEn = ['Overview','Company Presentation','Admin','Stores & Products','Point Settings','Transaction Volume','Reward Flow Matrix','Scenarios & Results','Company Profit','Store Evaluation','Partner Pitch','Stress Test','Scenario Library','Firebase Cloud','Partner Report','AI Analysis'];
+function applyLanguage(){
+  document.body.classList.toggle('lang-en', currentLang==='en');
+  document.documentElement.lang=currentLang;
+  document.documentElement.dir=currentLang==='en'?'ltr':'rtl';
+  const labels=currentLang==='en'?navLabelsEn:navLabelsAr;
+  document.querySelectorAll('#nav button').forEach((b,i)=>{const num=b.querySelector('.num')?.outerHTML||''; b.innerHTML=num+' '+(labels[i]||b.dataset.section);});
+  document.getElementById('langToggle').textContent=currentLang==='en'?'عربي':'English';
+  const set=(id,ar,en)=>{const el=document.getElementById(id); if(el) el.textContent=currentLang==='en'?en:ar;};
+  set('presTitle','Dealit Reward Flow — عرض الشريك بالشركة','Dealit Reward Flow — Company Partner Presentation');
+  set('presSub','صفحة مخصصة لشرح الفكرة للشريك الداخلي: كيف نكسب، كيف نحمي المتاجر، وكيف نقرر أفضل القطاعات للإطلاق.','A focused internal presentation: how we earn, protect stores, and choose the best launch mix.');
+  set('businessModelTitle','نموذج الربح','Profit Model');
+  set('businessModelText','الشركة تأخذ العمولة على السعر الأصلي، وتخصص جزءاً من العمولة كمكافآت للعميل. المتجر يستفيد من traffic إضافي، والشركة تدير توازن النقاط بين المتاجر.','The company takes commission on the original price and allocates part of it as customer rewards. Stores gain incremental traffic while the company manages reward balance.');
+  set('businessModelNotice','النقاط لا تولّد نقاطاً جديدة إلا على المبلغ المدفوع نقداً، وهذا يقلل تضخم المكافآت ويحافظ على استدامة النظام.','New points are earned only on the cash-paid amount, reducing reward inflation and protecting sustainability.');
+  set('partnerProtectionTitle','حماية الشركاء','Partner Protection');
+  set('partnerProtectionText','إذا ظهر متجر يستقبل نقاطاً أكثر مما يصدر، النظام يوصي بتدخلات Push Campaign أو تعديل حد صرف النقاط أو إعادة توزيع العروض.','If a store receives more redeemed points than it issues, the system recommends push campaigns, cap changes, or offer rebalancing.');
+  set('flowTitle','كيف تعمل دورة النقاط؟','How the Reward Flow Works');
+  set('launchDecisionTitle','قرار الإطلاق المقترح','Recommended Launch Decision');
+  if(titles[currentSection]){document.getElementById('pageTitle').textContent=(currentLang==='en'&&titlesEn[currentSection]?titlesEn[currentSection][0]:titles[currentSection][0]);document.getElementById('pageSub').textContent=(currentLang==='en'&&titlesEn[currentSection]?titlesEn[currentSection][1]:titles[currentSection][1]);}
+}
+function toggleLanguage(){currentLang=currentLang==='ar'?'en':'ar';localStorage.setItem('rfs-lang',currentLang);applyLanguage();renderAll();toast(currentLang==='en'?'English mode':'تم التحويل للعربية');}
+function unlockAdmin(){const v=document.getElementById('adminPassword')?.value||''; if(v===ADMIN_PASSWORD){adminUnlocked=true;sessionStorage.setItem('rfs-admin','1');renderAdmin();toast('تم فتح صفحة الإدارة');}else{toast('كلمة المرور غير صحيحة');}}
+function lockAdmin(){adminUnlocked=false;sessionStorage.removeItem('rfs-admin');renderAdmin();toast('تم قفل صفحة الإدارة');}
+function renderAdmin(){const login=document.getElementById('adminLogin'), panel=document.getElementById('adminPanel'); if(!login||!panel)return; login.classList.toggle('hidden',adminUnlocked); panel.classList.toggle('hidden',!adminUnlocked);}
+function getSummaryMetrics(){const data=calculateScenario(currentScenario||'expected');const rows=data.ids.map(id=>data.per[id]);const totalSales=data.totals.sales;const issued=data.totals.issuedPoints;const redeemed=data.totals.redeemedPoints;const profit=getProfitMetrics(currentScenario||'expected').totals;const company={netProfit:profit.conservativeNet};const high=rows.filter(r=>['high','critical'].includes(r.risk.key)).length;return{rows,totalSales,issued,redeemed,company,high};}
+function computeEvaluation(){const rows=getProfitMetrics(currentScenario||'expected').rows;return rows.map(row=>({name:row.p.store.name, sector:row.p.store.sector, ...getPartnerDecision(row)}));}
+function renderCompanyPresentation(){
+  const k=document.getElementById('companyPitchKpis'); if(!k)return; const m=getSummaryMetrics();
+  const ar=currentLang!=='en';
+  k.innerHTML=`<div class="pitch-card"><span>${ar?'إجمالي المبيعات المتوقعة':'Expected Sales'}</span><b>${money(m.totalSales)}</b><p>${ar?'حجم تجاري قابل للتوسع حسب عدد المتاجر والعمليات.':'Scalable commercial volume based on stores and transaction count.'}</p></div>
+  <div class="pitch-card"><span>${ar?'صافي ربح الشركة':'Company Net Profit'}</span><b>${money(m.company.netProfit)}</b><p>${ar?'بعد احتساب المكافآت وتعويض النقاط المصروفة.':'After reward cost and redeemed point compensation.'}</p></div>
+  <div class="pitch-card"><span>${ar?'المتاجر عالية الخطر':'High-Risk Stores'}</span><b>${m.high}</b><p>${ar?'يتم التحكم بها عبر Push وتعديل حدود الصرف.':'Managed through push campaigns and redemption cap controls.'}</p></div>`;
+  const rec=document.getElementById('presentationRecommendations');
+  const top=[...m.rows].sort((a,b)=>b.risk.score-a.risk.score).slice(0,3);
+  rec.innerHTML=top.map(r=>`<div class="rec-card"><h4>${escapeHtml(r.store.name)} <span class="badge ${r.risk.key}">${r.risk.label}</span></h4><p>${ar?'الإجراء المقترح':'Recommended action'}: ${escapeHtml(r.recommendation)}</p></div>`).join('');
+  const board=document.getElementById('launchDecisionBoard');
+  const evals=computeEvaluation();
+  const buckets={start:evals.filter(e=>e.decision.includes('Accept')).slice(0,4), negotiate:evals.filter(e=>e.decision.includes('Negotiate')).slice(0,4), watch:evals.filter(e=>e.decision.includes('Conditions')).slice(0,4), avoid:evals.filter(e=>e.decision.includes('Reject')).slice(0,4)};
+  board.innerHTML=`<div class="decision-card"><h4>${ar?'ابدأ مع':'Start With'}</h4>${buckets.start.map(e=>`<div class="pill">${escapeHtml(e.name)}</div>`).join('')||'<div class="empty">—</div>'}</div><div class="decision-card"><h4>${ar?'تفاوض':'Negotiate'}</h4>${buckets.negotiate.map(e=>`<div class="pill">${escapeHtml(e.name)}</div>`).join('')||'<div class="empty">—</div>'}</div><div class="decision-card"><h4>${ar?'راقب بشروط':'Watch / Conditions'}</h4>${buckets.watch.map(e=>`<div class="pill">${escapeHtml(e.name)}</div>`).join('')||'<div class="empty">—</div>'}</div><div class="decision-card"><h4>${ar?'تجنب مؤقتاً':'Avoid for Now'}</h4>${buckets.avoid.map(e=>`<div class="pill">${escapeHtml(e.name)}</div>`).join('')||'<div class="empty">—</div>'}</div>`;
+}
+async function copyCompanyPitch(){const m=getSummaryMetrics();const text=`Dealit Reward Flow\nExpected sales: ${formatNumber(m.totalSales)} JOD\nCompany net profit: ${formatNumber(m.company.netProfit)} JOD\nIssued points: ${formatNumber(m.issued)}\nRedeemed points: ${formatNumber(m.redeemed)}\nHigh-risk stores: ${m.high}\nCore message: rewards are funded from company commission, points are earned only on cash-paid amounts, and risk is managed through matrix-based simulation and push campaigns.`;await navigator.clipboard.writeText(text);toast('تم نسخ ملخص العرض');}
+
+function init(){
+  loadScenarioLibrary(false);
+  document.querySelectorAll('#nav button').forEach(btn=>btn.addEventListener('click',()=>showSection(btn.dataset.section)));
+  if(app.stores.length===0){ addAssumedMarketData(false); }
+  const savedKey = localStorage.getItem('gemini-api-key-rfs');
+  if(savedKey){document.getElementById('geminiKey').value=savedKey;document.getElementById('saveKey').checked=true;}
+  renderAll();
+  applyLanguage();
+  renderAdmin();
+}
+
+function showSection(id){
+  currentSection=id;
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('active',b.dataset.section===id));
+  document.getElementById('pageTitle').textContent=(currentLang==='en'&&titlesEn[id]?titlesEn[id][0]:titles[id][0]);
+  document.getElementById('pageSub').textContent=(currentLang==='en'&&titlesEn[id]?titlesEn[id][1]:titles[id][1]);
+  closeSidebar();
+  renderAll();
+}
+function setScenario(s){currentScenario=s;document.querySelectorAll('.scenario-tabs button').forEach(b=>b.classList.toggle('active',b.dataset.scenario===s));renderDashboard();renderProfit();renderEvaluation();renderPartnerPitch();renderStressTest();renderPartnerView();}
+
+function addDemoData(show=true){
+  app.stores = [
+    {id:uid(),name:'متجر إلكترونيات A',sector:'إلكترونيات',price:200,profitPct:22,commissionPct:10,rewardPct:50,customCap:'',notes:'منتجات متوسطة القيمة'},
+    {id:uid(),name:'مطعم B',sector:'مطاعم',price:35,profitPct:35,commissionPct:12,rewardPct:40,customCap:'',notes:'جاذبية عالية لصرف النقاط'},
+    {id:uid(),name:'صيدلية C',sector:'صيدليات',price:25,profitPct:18,commissionPct:8,rewardPct:45,customCap:'',notes:'زيارات متكررة'},
+    {id:uid(),name:'أزياء D',sector:'أزياء',price:80,profitPct:40,commissionPct:15,rewardPct:35,customCap:'',notes:'موسمي وعروض'}
+  ];
+  app.volume={};
+  app.stores.forEach((s,i)=>{app.volume[s.id]={transactions:[120,260,180,140][i],avgBasket:s.price,redeemUsersPct:[25,38,30,28][i],earnOnlyPct:[75,62,70,72][i],newCustomersPct:[8,15,10,12][i],pushLiftPct:[5,12,6,10][i],attractiveness:[7.5,9,6.5,8][i],selfRetentionPct:[18,24,14,20][i]};});
+  buildDefaultMatrix();
+  if(show) toast('تمت تعبئة مثال تجريبي');
+  renderAll();
+}
+
+function resetAll(){
+  if(!confirm('هل تريد مسح كل البيانات؟')) return;
+  app={settings:{pointValue:1,globalCap:50,redemptionUtil:80,circulationRate:75,worstStress:35,bestRelief:35},stores:[],volume:{},matrix:{}};
+  renderAll();
+  toast('تم مسح البيانات');
+}
+
+function addStore(){
+  const id=uid();
+  app.stores.push({id,name:'متجر جديد',sector:'أخرى',price:100,profitPct:25,commissionPct:10,rewardPct:50,customCap:'',notes:''});
+  app.volume[id]={transactions:100,avgBasket:100,redeemUsersPct:25,earnOnlyPct:75,newCustomersPct:10,pushLiftPct:5};
+  addStoreToMatrix(id);
+  renderAll();
+  toast('تمت إضافة متجر');
+}
+function duplicateLastStore(){
+  if(app.stores.length===0) return addStore();
+  const last=app.stores[app.stores.length-1];
+  const id=uid();
+  app.stores.push({...last,id,name:last.name+' - نسخة'});
+  app.volume[id]={...(app.volume[last.id]||{}),avgBasket:last.price};
+  addStoreToMatrix(id);
+  renderAll();
+}
+function removeStore(id){
+  if(!confirm('حذف هذا المتجر؟')) return;
+  app.stores=app.stores.filter(s=>s.id!==id);
+  delete app.volume[id];
+  delete app.matrix[id];
+  Object.keys(app.matrix).forEach(from=>delete app.matrix[from][id]);
+  normalizeMatrixRows(false);
+  renderAll();
+}
+function updateStore(id,field,value){
+  const s=app.stores.find(x=>x.id===id); if(!s) return;
+  if(['name','sector','notes'].includes(field)) s[field]=value;
+  else s[field]=n(value);
+  if(field==='price' && app.volume[id] && (!app.volume[id].avgBasket || app.volume[id].avgBasket===0)) app.volume[id].avgBasket=s.price;
+  renderAll(false);
+}
+function calcStore(s){
+  const price=n(s.price);
+  const commission=price*pct(s.commissionPct);
+  const reward=commission*pct(s.rewardPct);
+  const netCompany=commission-reward;
+  const storeDue=price-commission;
+  const economicAfter=price-commission-reward;
+  const storeProfit=price*pct(s.profitPct);
+  const merchantActualPct=n(s.commissionPct);
+  const apparentPct=n(s.commissionPct) + (n(s.commissionPct)*pct(s.rewardPct));
+  const cap = s.customCap!=='' && s.customCap!==null && !Number.isNaN(Number(s.customCap)) ? n(s.customCap) : app.settings.globalCap;
+  const maxRedeem=price*pct(cap);
+  return {price,commission,reward,netCompany,storeDue,economicAfter,storeProfit,merchantActualPct,apparentPct,cap,maxRedeem};
+}
+function renderStores(){
+  const el=document.getElementById('storesTable');
+  if(app.stores.length===0){el.innerHTML='<tr><td class="empty">لا يوجد متاجر بعد. اضغط إضافة متجر.</td></tr>';return;}
+  el.innerHTML=`<thead><tr>
+    <th>اسم المتجر</th><th>القطاع</th><th>سعر المنتج</th><th>نسبة ربح المنتج %</th><th>عمولة شركتي %</th><th>مكافأة العميل من العمولة %</th><th>حد صرف خاص %</th><th>قيمة العمولة</th><th>مكافأة العميل</th><th>صافي عمولتي</th><th>مستحقات المتجر</th><th>بعد العمولة + المكافأة</th><th>تحمل فعلي</th><th>تحمل ظاهري</th><th>ملاحظات</th><th></th>
+  </tr></thead><tbody>` + app.stores.map(s=>{
+    const c=calcStore(s);
+    return `<tr>
+      <td><input value="${escapeHtml(s.name)}" onchange="updateStore('${s.id}','name',this.value)"></td>
+      <td><select onchange="updateStore('${s.id}','sector',this.value)">${sectors.map(x=>`<option ${x===s.sector?'selected':''}>${x}</option>`).join('')}</select></td>
+      <td><input type="number" step="0.01" value="${s.price}" onchange="updateStore('${s.id}','price',this.value)"></td>
+      <td><input type="number" step="0.1" value="${s.profitPct}" onchange="updateStore('${s.id}','profitPct',this.value)"></td>
+      <td><input type="number" step="0.1" value="${s.commissionPct}" onchange="updateStore('${s.id}','commissionPct',this.value)"></td>
+      <td><input type="number" step="0.1" value="${s.rewardPct}" onchange="updateStore('${s.id}','rewardPct',this.value)"></td>
+      <td><input type="number" step="1" placeholder="عام" value="${s.customCap??''}" onchange="updateStore('${s.id}','customCap',this.value)"></td>
+      <td><span class="calc">${money(c.commission)}</span></td>
+      <td><span class="calc">${money(c.reward)}</span></td>
+      <td><span class="calc">${money(c.netCompany)}</span></td>
+      <td><span class="calc">${money(c.storeDue)}</span></td>
+      <td><span class="calc">${money(c.economicAfter)}</span></td>
+      <td><span class="badge info">${formatNumber(c.merchantActualPct)}%</span></td>
+      <td><span class="badge medium">${formatNumber(c.apparentPct)}%</span></td>
+      <td><input value="${escapeHtml(s.notes||'')}" onchange="updateStore('${s.id}','notes',this.value)"></td>
+      <td><button class="btn small danger" onclick="removeStore('${s.id}')">حذف</button></td>
+    </tr>`;
+  }).join('') + '</tbody>';
+}
+
+function updateSettings(){
+  app.settings.pointValue = Math.max(0.01,n(document.getElementById('pointValue').value,1));
+  app.settings.globalCap = clamp(document.getElementById('globalCap').value,0,100);
+  app.settings.redemptionUtil = clamp(document.getElementById('redemptionUtil').value,0,100);
+  app.settings.circulationRate = clamp(document.getElementById('circulationRate').value,0,100);
+  app.settings.worstStress = clamp(document.getElementById('worstStress').value,0,100);
+  app.settings.bestRelief = clamp(document.getElementById('bestRelief').value,0,100);
+  renderAll(false);
+}
+function renderSettings(){
+  document.getElementById('pointValue').value=app.settings.pointValue;
+  document.getElementById('globalCap').value=app.settings.globalCap;
+  document.getElementById('redemptionUtil').value=app.settings.redemptionUtil;
+  document.getElementById('circulationRate').value=app.settings.circulationRate;
+  document.getElementById('worstStress').value=app.settings.worstStress;
+  document.getElementById('bestRelief').value=app.settings.bestRelief;
+  renderTestCalc();
+}
+function renderTestCalc(){
+  const price=n(document.getElementById('testPrice')?.value,200);
+  const com=pct(document.getElementById('testCommission')?.value??10);
+  const rew=pct(document.getElementById('testReward')?.value??50);
+  const cap=pct(app.settings.globalCap);
+  const util=pct(app.settings.redemptionUtil);
+  const pointValue=app.settings.pointValue;
+  const maxPointsJod=price*cap;
+  const expectedRedeemed=maxPointsJod*util;
+  const cashPaid=price-expectedRedeemed;
+  const commissionOnOriginal=price*com;
+  const newRewardJod=cashPaid*com*rew;
+  const newPoints=newRewardJod/pointValue;
+  const el=document.getElementById('testCalc'); if(!el) return;
+  el.innerHTML=`<div class="grid two">
+    <div class="notice"><b>أقصى نقاط ممكن صرفها:</b><br>${money(maxPointsJod)} = ${points(maxPointsJod/pointValue)}</div>
+    <div class="notice"><b>الدفع النقدي المتوقع:</b><br>${money(cashPaid)}</div>
+    <div class="notice"><b>عمولة الشركة على السعر الأصلي:</b><br>${money(commissionOnOriginal)}</div>
+    <div class="notice good"><b>نقاط جديدة مكتسبة:</b><br>${points(newPoints)} (${money(newRewardJod)})</div>
+  </div>`;
+}
+
+function sectorDefaultAttractiveness(sector){
+  const map={'مطاعم':9,'ترفيه':8.5,'سوبرماركت':8,'أزياء':8,'أطفال':7.5,'إلكترونيات':7.5,'تجميل':7,'صيدليات':6.5,'خدمات':6,'تعليم':5.5,'أخرى':6};
+  return map[sector] || 6;
+}
+function ensureVolumeEntry(s){
+  if(!s) return {};
+  const base={transactions:100,avgBasket:n(s.price,100),redeemUsersPct:25,earnOnlyPct:75,newCustomersPct:10,pushLiftPct:5,attractiveness:sectorDefaultAttractiveness(s.sector),selfRetentionPct:20};
+  const current=app.volume[s.id]||{};
+  const merged={...base,...current};
+  Object.keys(base).forEach(k=>{
+    if(merged[k]===undefined || merged[k]==='' || Number.isNaN(Number(merged[k]))) merged[k]=base[k];
+  });
+  merged.attractiveness=clamp(merged.attractiveness,1,10);
+  merged.selfRetentionPct=clamp(merged.selfRetentionPct,0,100);
+  app.volume[s.id]=merged;
+  return merged;
+}
+function getSectorAffinity(fromSector,toSector){
+  const map={
+    'صيدليات':{'صيدليات':0.75,'مطاعم':1.25,'أزياء':1.15,'إلكترونيات':1.1,'سوبرماركت':1.05,'تجميل':1.05,'أطفال':1.0,'ترفيه':1.15,'تعليم':0.8,'خدمات':0.9,'أخرى':1},
+    'مطاعم':{'مطاعم':1.05,'أزياء':1.15,'إلكترونيات':1.0,'سوبرماركت':1.0,'تجميل':1.05,'ترفيه':1.2,'صيدليات':0.8,'أطفال':1.0,'تعليم':0.75,'خدمات':0.9,'أخرى':1},
+    'إلكترونيات':{'إلكترونيات':0.95,'أزياء':1.1,'مطاعم':1.15,'ترفيه':1.15,'تجميل':0.95,'سوبرماركت':1.0,'صيدليات':0.75,'أطفال':1.05,'تعليم':0.9,'خدمات':0.95,'أخرى':1},
+    'أزياء':{'أزياء':0.95,'مطاعم':1.2,'تجميل':1.15,'إلكترونيات':1.0,'ترفيه':1.1,'سوبرماركت':0.95,'صيدليات':0.75,'أطفال':1.05,'تعليم':0.75,'خدمات':0.9,'أخرى':1},
+    'سوبرماركت':{'سوبرماركت':0.95,'مطاعم':1.2,'أزياء':1.05,'إلكترونيات':1.0,'صيدليات':0.9,'تجميل':1.0,'أطفال':1.05,'ترفيه':1.05,'تعليم':0.8,'خدمات':0.9,'أخرى':1},
+    'تجميل':{'تجميل':0.95,'أزياء':1.25,'مطاعم':1.15,'إلكترونيات':0.95,'صيدليات':0.9,'سوبرماركت':1.0,'ترفيه':1.1,'أطفال':0.9,'تعليم':0.75,'خدمات':0.9,'أخرى':1},
+    'أطفال':{'أطفال':0.95,'مطاعم':1.15,'أزياء':1.1,'سوبرماركت':1.05,'ترفيه':1.2,'إلكترونيات':1.0,'صيدليات':0.85,'تعليم':1.0,'خدمات':0.9,'أخرى':1},
+    'ترفيه':{'ترفيه':1.0,'مطاعم':1.25,'أزياء':1.05,'إلكترونيات':1.0,'سوبرماركت':0.95,'تجميل':1.0,'أطفال':1.1,'صيدليات':0.7,'تعليم':0.75,'خدمات':0.9,'أخرى':1},
+    'تعليم':{'تعليم':0.9,'مطاعم':1.15,'إلكترونيات':1.15,'أزياء':1.0,'سوبرماركت':0.95,'أطفال':1.05,'ترفيه':1.0,'صيدليات':0.75,'تجميل':0.85,'خدمات':0.9,'أخرى':1},
+    'خدمات':{'خدمات':0.95,'مطاعم':1.15,'سوبرماركت':1.05,'أزياء':1.0,'إلكترونيات':1.0,'ترفيه':1.0,'صيدليات':0.8,'تجميل':1.0,'أطفال':1.0,'تعليم':0.85,'أخرى':1}
+  };
+  return (map[fromSector] && map[fromSector][toSector]) || (fromSector===toSector?0.95:1);
+}
+
+function syncVolumeWithStores(){
+  app.stores.forEach(s=>ensureVolumeEntry(s));
+  Object.keys(app.volume).forEach(id=>{if(!app.stores.some(s=>s.id===id)) delete app.volume[id];});
+  renderAll();toast('تم تحديث حجم العمليات');
+}
+function updateVolume(id,field,value){
+  if(!app.volume[id]) app.volume[id]={};
+  app.volume[id][field]=n(value);
+  renderAll(false);
+}
+function renderVolume(){
+  syncVolumeWithStoresNoRender();
+  const el=document.getElementById('volumeTable');
+  if(app.stores.length===0){el.innerHTML='<tr><td class="empty">أضف المتاجر أولاً.</td></tr>';return;}
+  el.innerHTML=`<thead><tr><th>المتجر</th><th>القطاع</th><th>عدد العمليات</th><th>متوسط السلة</th><th>نسبة مستخدمي النقاط %</th><th>نسبة Earn Only %</th><th>عملاء جدد بسبب النظام %</th><th>نمو متوقع مع Push %</th><th>جاذبية الصرف 1-10</th><th>رجوع لنفس المتجر %</th><th>مبيعات متوقعة</th><th>نقاط صادرة متوقعة</th></tr></thead><tbody>`+
+  app.stores.map(s=>{
+    const v=ensureVolumeEntry(s); const sim=calcStoreSimulation(s);
+    return `<tr><td><b>${escapeHtml(s.name)}</b></td><td>${escapeHtml(s.sector)}</td>
+      <td><input type="number" value="${v.transactions}" onchange="updateVolume('${s.id}','transactions',this.value)"></td>
+      <td><input type="number" step="0.01" value="${v.avgBasket}" onchange="updateVolume('${s.id}','avgBasket',this.value)"></td>
+      <td><input type="number" step="0.1" value="${v.redeemUsersPct}" onchange="updateVolume('${s.id}','redeemUsersPct',this.value)"></td>
+      <td><input type="number" step="0.1" value="${v.earnOnlyPct}" onchange="updateVolume('${s.id}','earnOnlyPct',this.value)"></td>
+      <td><input type="number" step="0.1" value="${v.newCustomersPct}" onchange="updateVolume('${s.id}','newCustomersPct',this.value)"></td>
+      <td><input type="number" step="0.1" value="${v.pushLiftPct}" onchange="updateVolume('${s.id}','pushLiftPct',this.value)"></td>
+      <td><input type="number" step="0.1" min="1" max="10" value="${v.attractiveness}" onchange="updateVolume('${s.id}','attractiveness',this.value)"></td>
+      <td><input type="number" step="0.1" min="0" max="100" value="${v.selfRetentionPct}" onchange="updateVolume('${s.id}','selfRetentionPct',this.value)"></td>
+      <td><span class="calc">${money(sim.totalSales)}</span></td>
+      <td><span class="calc">${points(sim.issuedPoints)}</span></td>
+    </tr>`;
+  }).join('')+'</tbody>';
+}
+function syncVolumeWithStoresNoRender(){
+  app.stores.forEach(s=>ensureVolumeEntry(s));
+}
+function calcStoreSimulation(s){
+  const v=app.volume[s.id]||{};
+  const calc=calcStore(s);
+  const tx=n(v.transactions);
+  const avg=n(v.avgBasket,calc.price||0);
+  const newCust=pct(v.newCustomersPct);
+  const totalTx=tx*(1+newCust);
+  const totalSales=totalTx*avg;
+  const redeemUsers=clamp(v.redeemUsersPct,0,100)/100;
+  const earnOnly=clamp(v.earnOnlyPct,0,100)/100;
+  const redeemTx=totalTx*redeemUsers;
+  const earnTx=totalTx*Math.min(earnOnly,1);
+  const cap = calc.cap/100;
+  const util = app.settings.redemptionUtil/100;
+  const cashPaidRedeem=avg*(1-(cap*util));
+  const cashBase=(earnTx*avg)+(redeemTx*cashPaidRedeem);
+  const issuedJod=cashBase*pct(s.commissionPct)*pct(s.rewardPct);
+  const issuedPoints=issuedJod/app.settings.pointValue;
+  const maxRedeemableJod=totalTx*avg*cap;
+  const commissionOnOriginal=totalSales*pct(s.commissionPct);
+  const companyNetAfterIssued=commissionOnOriginal-issuedJod;
+  return {tx,avg,totalTx,totalSales,redeemTx,earnTx,cashBase,issuedJod,issuedPoints,maxRedeemableJod,commissionOnOriginal,companyNetAfterIssued};
+}
+
+function buildSmartMatrix(){
+  const ids=app.stores.map(s=>s.id);
+  if(ids.length===0){toast('أضف المتاجر أولاً');return;}
+  syncVolumeWithStoresNoRender();
+  app.matrix={};
+  ids.forEach(from=>{
+    const fromStore=app.stores.find(s=>s.id===from);
+    const weights={};
+    let totalWeight=0;
+    ids.forEach(to=>{
+      const toStore=app.stores.find(s=>s.id===to);
+      const v=ensureVolumeEntry(toStore);
+      const sim=calcStoreSimulation(toStore);
+      const calc=calcStore(toStore);
+      const txFactor=Math.sqrt(Math.max(sim.totalTx,1));
+      const basketFactor=Math.sqrt(Math.max(n(v.avgBasket,calc.price),1));
+      const attractiveness=clamp(v.attractiveness,1,10);
+      const redeemDemand=0.65 + clamp(v.redeemUsersPct,0,100)/100;
+      const capFactor=0.70 + clamp(calc.cap,0,100)/100;
+      const sectorFactor=getSectorAffinity(fromStore?.sector,toStore?.sector);
+      const rewardPull=0.80 + (clamp(toStore.rewardPct,0,100)/100)*0.40;
+      const pushFactor=1 + (clamp(v.pushLiftPct,0,100)/100)*0.15;
+      let weight=txFactor*basketFactor*attractiveness*redeemDemand*capFactor*sectorFactor*rewardPull*pushFactor;
+      if(from===to) weight *= (1 + clamp(v.selfRetentionPct,0,100)/100);
+      weight=Math.max(weight,0.0001);
+      weights[to]=weight;
+      totalWeight+=weight;
+    });
+    app.matrix[from]={};
+    let running=0;
+    ids.forEach((to,idx)=>{
+      const value=idx===ids.length-1 ? +(100-running).toFixed(2) : +((weights[to]/totalWeight)*100).toFixed(2);
+      app.matrix[from][to]=value;
+      running+=value;
+    });
+  });
+  normalizeMatrixRows(false);
+  renderAll(false);
+  toast('تم حساب الاحتمالات تلقائياً');
+}
+function showSmartMatrixDetails(){
+  openModal('منطق الخوارزمية الذكية', `<div class="notice good"><b>الهدف:</b> تحويل جاذبية كل متجر إلى احتمال صرف نقاط داخل المصفوفة.</div>
+  <p class="hint">لكل متجر مستقبِل للنقاط، يحسب النظام وزنًا تقريبيًا ثم يحوّله إلى نسبة مئوية داخل كل صف.</p>
+  <pre>وزن المتجر = √عدد العمليات × √متوسط السلة × جاذبية الصرف × طلب الاستبدال × حد الصرف × معامل القطاع × عامل المكافأة × عامل Push</pre>
+  <p class="hint">إذا كان مصدر النقاط ونقطة الصرف نفس المتجر، يضيف النظام عامل “رجوع لنفس المتجر”. بعد ذلك يتم تطبيع الصف ليصبح مجموعه 100%.</p>`);
+}
+
+function buildDefaultMatrix(){
+  app.matrix={};
+  const ids=app.stores.map(s=>s.id);
+  ids.forEach(from=>{app.matrix[from]={};ids.forEach(to=>app.matrix[from][to]=ids.length?+(100/ids.length).toFixed(2):0);});
+  normalizeMatrixRows(false);
+}
+function addStoreToMatrix(id){
+  const ids=app.stores.map(s=>s.id);
+  if(!app.matrix[id]) app.matrix[id]={};
+  ids.forEach(to=>{if(app.matrix[id][to]===undefined) app.matrix[id][to]=+(100/ids.length).toFixed(2);});
+  Object.keys(app.matrix).forEach(from=>{if(app.matrix[from][id]===undefined) app.matrix[from][id]=+(100/ids.length).toFixed(2);});
+  normalizeMatrixRows(false);
+}
+function buildEqualMatrix(){buildDefaultMatrix();renderAll();toast('تم توزيع المصفوفة بالتساوي');}
+function updateMatrix(from,to,value){
+  if(!app.matrix[from]) app.matrix[from]={};
+  app.matrix[from][to]=n(value);
+  renderAll(false);
+}
+function normalizeMatrixRows(show=true){
+  const ids=app.stores.map(s=>s.id);
+  ids.forEach(from=>{
+    if(!app.matrix[from]) app.matrix[from]={};
+    ids.forEach(to=>{if(app.matrix[from][to]===undefined) app.matrix[from][to]=0;});
+    let sum=ids.reduce((a,to)=>a+n(app.matrix[from][to]),0);
+    if(sum<=0){ids.forEach(to=>app.matrix[from][to]=+(100/ids.length).toFixed(2));}
+    else {ids.forEach(to=>app.matrix[from][to]=+(n(app.matrix[from][to])*100/sum).toFixed(2));}
+    let adjusted=ids.reduce((a,to)=>a+n(app.matrix[from][to]),0);
+    if(ids.length){app.matrix[from][ids[ids.length-1]]=+(n(app.matrix[from][ids[ids.length-1]])+(100-adjusted)).toFixed(2);}
+  });
+  if(show) toast('تم تعديل كل صف إلى 100%');
+  renderAll(false);
+}
+function renderMatrix(){
+  const ids=app.stores.map(s=>s.id);
+  const notice=document.getElementById('matrixNotice');
+  if(ids.length===0){document.getElementById('matrixTable').innerHTML='<tr><td class="empty">أضف المتاجر أولاً.</td></tr>';notice.textContent='لا توجد متاجر.';return;}
+  ids.forEach(id=>{if(!app.matrix[id]) addStoreToMatrix(id);});
+  const allOk=ids.every(from=>Math.abs(ids.reduce((a,to)=>a+n(app.matrix[from]?.[to]),0)-100)<0.05);
+  notice.className='notice '+(allOk?'good':'warn');
+  notice.innerHTML=allOk?'كل صفوف المصفوفة مجموعها 100%. جاهز للحساب.':'يوجد صفوف لا تساوي 100%. اضغط “تعديل الصفوف إلى 100%”.';
+  let html='<thead><tr><th>النقاط المكتسبة من / تصرف في</th>'+ids.map(id=>`<th>${escapeHtml(storeName(id))}</th>`).join('')+'<th>المجموع</th></tr></thead><tbody>';
+  ids.forEach(from=>{
+    const sum=ids.reduce((a,to)=>a+n(app.matrix[from]?.[to]),0);
+    html+=`<tr><td><b>${escapeHtml(storeName(from))}</b></td>`+ids.map(to=>`<td><input class="matrix-input" type="number" step="0.1" value="${n(app.matrix[from]?.[to]).toFixed(2)}" onchange="updateMatrix('${from}','${to}',this.value)"> %</td>`).join('')+`<td class="${Math.abs(sum-100)<0.05?'row-ok':'row-bad'}">${formatNumber(sum)}%</td></tr>`;
+  });
+  html+='</tbody>';
+  document.getElementById('matrixTable').innerHTML=html;
+}
+function storeName(id){return app.stores.find(s=>s.id===id)?.name || id}
+
+function calculateScenario(type='expected'){
+  syncVolumeWithStoresNoRender();
+  const ids=app.stores.map(s=>s.id);
+  const per={};
+  let totalIssuedJod=0,totalSales=0,totalCommission=0,totalCapacity=0;
+  ids.forEach(id=>{
+    const s=app.stores.find(x=>x.id===id);
+    const sim=calcStoreSimulation(s);
+    per[id]={store:s,...sim,expectedRedeemedJod:0,worstRedeemedJod:0,bestRedeemedJod:0,redeemedJod:0};
+    totalIssuedJod+=sim.issuedJod; totalSales+=sim.totalSales; totalCommission+=sim.commissionOnOriginal; totalCapacity+=sim.maxRedeemableJod;
+  });
+  ids.forEach(from=>{
+    ids.forEach(to=>{
+      const share=pct(app.matrix[from]?.[to]??0);
+      const flow=per[from].issuedJod*share*pct(app.settings.circulationRate);
+      if(per[to]) per[to].expectedRedeemedJod+=flow;
+    });
+  });
+  ids.forEach(id=>{
+    const p=per[id];
+    const expected=Math.min(p.expectedRedeemedJod,p.maxRedeemableJod);
+    const stress=pct(app.settings.worstStress);
+    const relief=pct(app.settings.bestRelief);
+    const additional=(totalIssuedJod*pct(app.settings.circulationRate)-expected)*stress;
+    const worst=Math.min(p.maxRedeemableJod, Math.max(0, expected+additional));
+    const best=Math.max(0, expected*(1-relief));
+    p.expectedRedeemedJod=expected;
+    p.worstRedeemedJod=worst;
+    p.bestRedeemedJod=best;
+    p.redeemedJod=type==='worst'?worst:type==='best'?best:expected;
+    p.redeemedPoints=p.redeemedJod/app.settings.pointValue;
+    p.netJod=p.issuedJod-p.redeemedJod;
+    p.netPoints=p.netJod/app.settings.pointValue;
+    p.risk=riskLevel(p);
+    p.recommendation=recommendation(p,type);
+    p.pushNeed=pushNeed(p);
+  });
+  const totals=ids.reduce((acc,id)=>{const p=per[id];acc.issuedJod+=p.issuedJod;acc.redeemedJod+=p.redeemedJod;acc.netJod+=p.netJod;acc.sales+=p.totalSales;acc.commission+=p.commissionOnOriginal;acc.capacity+=p.maxRedeemableJod;return acc;},{issuedJod:0,redeemedJod:0,netJod:0,sales:0,commission:0,capacity:0});
+  totals.issuedPoints=totals.issuedJod/app.settings.pointValue; totals.redeemedPoints=totals.redeemedJod/app.settings.pointValue; totals.netPoints=totals.netJod/app.settings.pointValue;
+  return {per,totals,ids,type};
+}
+function riskLevel(p){
+  const issued=Math.max(p.issuedJod,1);
+  const gap=p.redeemedJod-p.issuedJod;
+  const ratio=gap/issued;
+  if(gap<=0) return {key:'low',label:'Low',score:Math.max(0,Math.round((p.redeemedJod/issued)*35))};
+  if(ratio<=0.25) return {key:'medium',label:'Medium',score:50};
+  if(ratio<=0.75) return {key:'high',label:'High',score:75};
+  return {key:'critical',label:'Critical',score:95};
+}
+function pushNeed(p){
+  if(p.risk.key==='critical') return 'Push قوي + تعديل حد الصرف مؤقتاً';
+  if(p.risk.key==='high') return 'Push Campaign لرفع الشراء النقدي';
+  if(p.risk.key==='medium') return 'Push خفيف أو مراقبة أسبوعية';
+  return 'لا يحتاج تدخل فوري';
+}
+function recommendation(p,type){
+  const store=escapeHtml(p.store.name);
+  if(p.risk.key==='critical') return `${store}: يستقبل نقاط أكثر بكثير من التي يصدرها. يوصى بتدخل فوري عبر Push قوي، وربما تقليل حد الصرف مؤقتاً أو إعادة توزيع المصفوفة.`;
+  if(p.risk.key==='high') return `${store}: لديه فجوة سلبية واضحة في صافي النقاط. يوصى بتفعيل حملة Push لزيادة العروض والمشتريات النقدية وإعادة التوازن.`;
+  if(p.risk.key==='medium') return `${store}: الفجوة تحت السيطرة لكنها تحتاج مراقبة. يمكن استخدام Push خفيف إذا زاد الاسترداد.`;
+  return `${store}: وضعه مستقر. يصدر نقاطاً كافية مقارنة بما يُصرف لديه، ولا يحتاج تدخل فوري.`;
+}
+function renderDashboard(){
+  const data=calculateScenario(currentScenario);
+  renderDashboardKpis(data);
+  renderDashboardVisuals(data);
+  renderResultsTable(data);
+  renderRecommendations(data);
+}
+function renderDashboardKpis(data){
+  const el=document.getElementById('dashboardKpis'); if(!el) return;
+  const highRisk=data.ids.map(id=>data.per[id]).filter(p=>['high','critical'].includes(p.risk.key)).length;
+  el.innerHTML=`
+    <div class="kpi"><span>إجمالي المبيعات المتوقعة</span><strong>${money(data.totals.sales)}</strong></div>
+    <div class="kpi"><span>نقاط صادرة</span><strong>${points(data.totals.issuedPoints)}</strong></div>
+    <div class="kpi"><span>نقاط مصروفة</span><strong>${points(data.totals.redeemedPoints)}</strong></div>
+    <div class="kpi"><span>متاجر عالية الخطر</span><strong>${highRisk}</strong></div>`;
+}
+function renderDashboardVisuals(data){
+  const bars=document.getElementById('dashboardBars');
+  const risks=document.getElementById('riskVisual');
+  if(!data.ids.length){
+    if(bars) bars.innerHTML='<div class="empty">لا توجد بيانات.</div>';
+    if(risks) risks.innerHTML='<div class="empty">لا توجد بيانات.</div>';
+    return;
+  }
+  const rows=data.ids.map(id=>data.per[id]);
+  const max=Math.max(1,...rows.flatMap(p=>[p.issuedJod,p.redeemedJod]));
+  if(bars){
+    bars.innerHTML=rows.map(p=>{
+      const iw=Math.max(2,(p.issuedJod/max)*100);
+      const rw=Math.max(2,(p.redeemedJod/max)*100);
+      const netClass=p.netJod>=0?'positive':'negative';
+      return `<div class="bar-card">
+        <div class="bar-head"><div><div class="bar-title">${escapeHtml(p.store.name)}</div><div class="bar-sub">${escapeHtml(p.store.sector)} • صافي النقاط: <b class="risk-net ${netClass}">${money(p.netJod)}</b></div></div><span class="badge ${p.risk.key}">${p.risk.label}</span></div>
+        <div class="dual-bars">
+          <div class="bar-line"><span>Issued</span><div class="track"><span class="issued" style="width:${iw}%"></span></div><b class="bar-value">${money(p.issuedJod)}</b></div>
+          <div class="bar-line"><span>Redeemed</span><div class="track"><span class="redeemed" style="width:${rw}%"></span></div><b class="bar-value">${money(p.redeemedJod)}</b></div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+  if(risks){
+    risks.innerHTML=rows.slice().sort((a,b)=>b.risk.score-a.risk.score).map(p=>{
+      const netClass=p.netJod>=0?'positive':'negative';
+      return `<div class="risk-item">
+        <div class="risk-head"><div><div class="risk-title">${escapeHtml(p.store.name)}</div><div class="risk-sub">${escapeHtml(p.pushNeed)}</div></div><span class="badge ${p.risk.key}">${p.risk.label}</span></div>
+        <div class="track"><span class="${p.risk.key==='low'?'profit':'loss'}" style="width:${p.risk.score}%"></span></div>
+        <div class="risk-meta"><span class="risk-score">${p.risk.score}/100</span><span class="risk-net ${netClass}">${money(p.netJod)}</span></div>
+      </div>`;
+    }).join('');
+  }
+}
+function renderResultsTable(data){
+  const el=document.getElementById('resultsTable');
+  if(!el) return;
+  if(data.ids.length===0){el.innerHTML='<tr><td class="empty">لا توجد بيانات.</td></tr>';return;}
+  el.innerHTML=`<thead><tr><th>المتجر</th><th>القطاع</th><th>المبيعات</th><th>نقاط صادرة</th><th>نقاط مصروفة</th><th>صافي النقاط</th><th>عمولة الشركة</th><th>صافي بعد المكافآت</th><th>Risk</th><th>Push Action</th></tr></thead><tbody>`+
+  data.ids.map(id=>{const p=data.per[id];return `<tr>
+    <td><b>${escapeHtml(p.store.name)}</b></td><td>${escapeHtml(p.store.sector)}</td><td>${money(p.totalSales)}</td><td>${points(p.issuedPoints)}</td><td>${points(p.redeemedPoints)}</td><td><b style="color:${p.netJod<0?'#dc2626':'#16a34a'}">${points(p.netPoints)}</b></td><td>${money(p.commissionOnOriginal)}</td><td>${money(p.companyNetAfterIssued)}</td><td><span class="badge ${p.risk.key}">${p.risk.label}</span></td><td>${escapeHtml(p.pushNeed)}</td>
+  </tr>`}).join('')+'</tbody>';
+}
+function renderRecommendations(data){
+  const el=document.getElementById('recommendations'); if(!el) return;
+  const sorted=data.ids.map(id=>data.per[id]).sort((a,b)=>b.risk.score-a.risk.score);
+  el.innerHTML=sorted.map(p=>`<div class="rec-card"><h4>${escapeHtml(p.store.name)} <span class="badge ${p.risk.key}">${p.risk.label}</span></h4><p>${p.recommendation}</p><div class="progress" style="margin-top:10px"><span style="width:${p.risk.score}%"></span></div><div class="mini">Risk score: ${p.risk.score}/100</div></div>`).join('') || '<div class="empty">لا توجد توصيات.</div>';
+}
+function getProfitMetrics(type=currentScenario){
+  const data=calculateScenario(type);
+  const rows=data.ids.map(id=>{
+    const p=data.per[id];
+    const grossCommission=p.commissionOnOriginal;
+    const issuedCost=p.issuedJod;
+    const redeemedCost=p.redeemedJod;
+    const netAfterIssued=grossCommission-issuedCost;
+    const cashAfterRedeemed=grossCommission-redeemedCost;
+    const conservativeNet=grossCommission-Math.max(issuedCost,redeemedCost);
+    const margin=p.totalSales?conservativeNet/p.totalSales*100:0;
+    const retention=grossCommission?conservativeNet/grossCommission*100:0;
+    const liability=issuedCost-redeemedCost;
+    return {id,p,grossCommission,issuedCost,redeemedCost,netAfterIssued,cashAfterRedeemed,conservativeNet,margin,retention,liability};
+  });
+  const totals=rows.reduce((a,r)=>{
+    a.sales+=r.p.totalSales; a.grossCommission+=r.grossCommission; a.issuedCost+=r.issuedCost; a.redeemedCost+=r.redeemedCost; a.netAfterIssued+=r.netAfterIssued; a.cashAfterRedeemed+=r.cashAfterRedeemed; a.conservativeNet+=r.conservativeNet; a.liability+=r.liability; return a;
+  },{sales:0,grossCommission:0,issuedCost:0,redeemedCost:0,netAfterIssued:0,cashAfterRedeemed:0,conservativeNet:0,liability:0});
+  totals.margin=totals.sales?totals.conservativeNet/totals.sales*100:0;
+  totals.retention=totals.grossCommission?totals.conservativeNet/totals.grossCommission*100:0;
+  return {data,rows,totals};
+}
+function renderProfit(){
+  const kpis=document.getElementById('profitKpis');
+  if(!kpis) return;
+  const {rows,totals}=getProfitMetrics(currentScenario);
+  kpis.innerHTML=`
+    <div class="profit-card"><span>إجمالي عمولة الشركة</span><strong>${money(totals.grossCommission)}</strong></div>
+    <div class="profit-card warn"><span>تكلفة النقاط الصادرة</span><strong>${money(totals.issuedCost)}</strong></div>
+    <div class="profit-card warn"><span>تعويض النقاط المصروفة</span><strong>${money(totals.redeemedCost)}</strong></div>
+    <div class="profit-card ${totals.conservativeNet>=0?'good':'bad'}"><span>صافي ربح محافظ</span><strong>${money(totals.conservativeNet)}</strong></div>
+    <div class="profit-card"><span>Retention من العمولة</span><strong>${formatNumber(totals.retention)}%</strong></div>`;
+  renderProfitWaterfall(totals);
+  renderProfitExplanation(totals);
+  renderProfitTable(rows);
+}
+function renderProfitWaterfall(t){
+  const el=document.getElementById('profitWaterfall'); if(!el) return;
+  const max=Math.max(1,t.grossCommission,t.issuedCost,t.redeemedCost,Math.abs(t.netAfterIssued),Math.abs(t.cashAfterRedeemed),Math.abs(t.conservativeNet));
+  const step=(label,value,cls='profit')=>`<div class="waterfall-step"><div class="waterfall-label">${label}</div><div class="track"><span class="${value>=0?cls:'loss'}" style="width:${Math.max(3,Math.abs(value)/max*100)}%"></span></div><div class="waterfall-value">${money(value)}</div></div>`;
+  el.innerHTML= step('إجمالي العمولة',t.grossCommission,'profit')+
+                step('تكلفة النقاط الصادرة',-t.issuedCost,'loss')+
+                step('صافي بعد إصدار النقاط',t.netAfterIssued,'profit')+
+                step('صافي نقدي بعد التعويض',t.cashAfterRedeemed,'profit')+
+                step('صافي محافظ',t.conservativeNet,'profit');
+}
+function renderProfitExplanation(t){
+  const el=document.getElementById('profitExplanation'); if(!el) return;
+  const liabilityText=t.liability>=0?`يوجد ${money(t.liability)} كنقاط صادرة لم تُصرف بعد؛ اعتبرها التزام مستقبلي.`:`الصرف أعلى من الإصدار بفارق ${money(Math.abs(t.liability))}؛ هذا ضغط يحتاج ضبط Matrix أو Push.`;
+  el.innerHTML=`
+    <div class="profit-formula"><b>المعادلة المحافظة:</b><br>صافي ربح الشركة = إجمالي عمولة الشركة - الأكبر بين تكلفة النقاط الصادرة وتعويض النقاط المصروفة.</div>
+    <div class="profit-note"><b>صافي بعد إصدار النقاط:</b> ${money(t.netAfterIssued)}<br>هذا يوضح ربح الشركة بعد تسجيل مكافآت العملاء كتكلفة/التزام.</div>
+    <div class="profit-note"><b>صافي نقدي بعد تعويض المتاجر:</b> ${money(t.cashAfterRedeemed)}<br>هذا يوضح أثر التعويض الفعلي للنقاط المصروفة خلال السيناريو.</div>
+    <div class="profit-note warn"><b>رصيد النقاط:</b> ${liabilityText}</div>`;
+}
+function renderProfitTable(rows){
+  const el=document.getElementById('profitTable'); if(!el) return;
+  if(!rows.length){el.innerHTML='<tr><td class="empty">لا توجد بيانات.</td></tr>';return;}
+  el.innerHTML=`<thead><tr><th>المتجر</th><th>المبيعات</th><th>عمولة الشركة</th><th>النقاط الصادرة</th><th>النقاط المصروفة</th><th>صافي بعد الإصدار</th><th>صافي نقدي بعد التعويض</th><th>صافي محافظ</th><th>هامش محافظ</th><th>ملاحظة</th></tr></thead><tbody>`+
+  rows.sort((a,b)=>b.conservativeNet-a.conservativeNet).map(r=>{
+    const cls=r.conservativeNet>=0?'good-num':'bad-num';
+    const note=r.conservativeNet<0?'راجع الاتفاق/حد الصرف':r.retention<25?'هامش منخفض':'جيد';
+    return `<tr><td><b>${escapeHtml(r.p.store.name)}</b></td><td>${money(r.p.totalSales)}</td><td>${money(r.grossCommission)}</td><td>${money(r.issuedCost)}</td><td>${money(r.redeemedCost)}</td><td>${money(r.netAfterIssued)}</td><td>${money(r.cashAfterRedeemed)}</td><td class="${cls}">${money(r.conservativeNet)}</td><td>${formatNumber(r.margin)}%</td><td>${note}</td></tr>`;
+  }).join('')+'</tbody>';
+}
+
+function renderOverview(){
+  const data=calculateScenario('expected');
+  const rows=data.ids.map(id=>data.per[id]);
+  const risky=rows.filter(p=>['high','critical'].includes(p.risk.key)).length;
+  const netBalance=data.totals.issuedJod-data.totals.redeemedJod;
+  document.getElementById('kpiRow').innerHTML=`
+    <div class="kpi"><span>عدد المتاجر</span><strong>${app.stores.length}</strong></div>
+    <div class="kpi"><span>قيمة النقطة</span><strong>${money(app.settings.pointValue)}</strong></div>
+    <div class="kpi"><span>حد صرف النقاط</span><strong>${formatNumber(app.settings.globalCap)}%</strong></div>
+    <div class="kpi"><span>متاجر عالية الخطر</span><strong>${risky}</strong></div>`;
+
+  const quick=document.getElementById('overviewQuickCards');
+  const flow=document.getElementById('overviewFlowList');
+  const recs=document.getElementById('overviewRecommendations');
+  if(!rows.length){
+    if(quick) quick.innerHTML='<div class="empty">أضف بيانات للبدء.</div>';
+    if(flow) flow.innerHTML='<div class="empty">لا توجد حركة نقاط بعد.</div>';
+    if(recs) recs.innerHTML='<div class="empty">لا توجد توصيات حالياً.</div>';
+    return;
+  }
+
+  const topRedeemed=rows.slice().sort((a,b)=>b.redeemedJod-a.redeemedJod)[0];
+  const topRisk=rows.slice().sort((a,b)=>b.risk.score-a.risk.score)[0];
+  const healthClass=netBalance>=0?'good':'bad';
+  if(quick){
+    quick.innerHTML=`
+      <div class="mini-kpi ${healthClass}"><span>صافي شبكة النقاط</span><strong>${money(netBalance)}</strong></div>
+      <div class="mini-kpi warn"><span>أعلى متجر يستقبل صرف</span><strong>${escapeHtml(topRedeemed.store.name)}</strong></div>
+      <div class="mini-kpi ${topRisk.risk.key==='low'?'good':'bad'}"><span>أعلى أولوية متابعة</span><strong>${escapeHtml(topRisk.store.name)}</strong></div>`;
+  }
+
+  const max=Math.max(1,...rows.flatMap(p=>[p.issuedJod,p.redeemedJod]));
+  if(flow){
+    flow.innerHTML=rows.slice().sort((a,b)=>b.risk.score-a.risk.score).slice(0,8).map(p=>{
+      const iw=Math.max(2,(p.issuedJod/max)*100);
+      const rw=Math.max(2,(p.redeemedJod/max)*100);
+      const netClass=p.netJod>=0?'positive':'negative';
+      return `<div class="flow-card">
+        <div class="flow-top"><div><div class="flow-title">${escapeHtml(p.store.name)}</div><div class="flow-sub">${escapeHtml(p.store.sector)} • صافي: <b class="flow-net ${netClass}">${money(p.netJod)}</b></div></div><span class="badge ${p.risk.key}">${p.risk.label}</span></div>
+        <div class="dual-bars">
+          <div class="bar-line"><span>صادرة</span><div class="track"><span class="issued" style="width:${iw}%"></span></div><b class="bar-value">${money(p.issuedJod)}</b></div>
+          <div class="bar-line"><span>مصروفة</span><div class="track"><span class="redeemed" style="width:${rw}%"></span></div><b class="bar-value">${money(p.redeemedJod)}</b></div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  const top=rows.slice().sort((a,b)=>b.risk.score-a.risk.score).slice(0,4);
+  if(recs){
+    recs.innerHTML=top.map(p=>`<div class="rec-card"><h4>${escapeHtml(p.store.name)} <span class="badge ${p.risk.key}">${p.risk.label}</span></h4><p>${p.recommendation}</p><span class="action-chip">${escapeHtml(p.pushNeed)}</span></div>`).join('') || '<div class="empty">أضف بيانات للبدء.</div>';
+  }
+}
+
+function drawOverviewChart(data){drawBars('overviewChart',data.ids.map(id=>({label:storeName(id),a:data.per[id].issuedJod,b:data.per[id].expectedRedeemedJod})),['Issued','Redeemed']);}
+function drawDashboardCharts(data){drawBars('dashboardChart',data.ids.map(id=>({label:storeName(id),a:data.per[id].issuedJod,b:data.per[id].redeemedJod})),['Issued','Redeemed']);drawRisk('riskChart',data.ids.map(id=>({label:storeName(id),score:data.per[id].risk.score})));}
+function drawBars(canvasId,rows,legend){
+  const canvas=document.getElementById(canvasId); if(!canvas) return; const parent=canvas.parentElement; const dpr=window.devicePixelRatio||1; canvas.width=parent.clientWidth*dpr; canvas.height=parent.clientHeight*dpr; const ctx=canvas.getContext('2d'); ctx.scale(dpr,dpr); const w=parent.clientWidth,h=parent.clientHeight; ctx.clearRect(0,0,w,h); ctx.font='12px '+getComputedStyle(document.body).fontFamily; const pad=36; const max=Math.max(1,...rows.flatMap(r=>[r.a,r.b])); const barH=Math.max(12,(h-pad*2)/(rows.length||1)/3); rows.forEach((r,i)=>{const y=pad+i*((h-pad*2)/(rows.length||1)); const label=(r.label||'').slice(0,18); ctx.fillStyle='#475569'; ctx.fillText(label,w-pad-150,y+10); const areaW=w-pad*2-170; const x=pad; const aW=(r.a/max)*areaW; const bW=(r.b/max)*areaW; const grad=ctx.createLinearGradient(x,0,x+aW,0);grad.addColorStop(0,'#4f46e5');grad.addColorStop(1,'#06b6d4');ctx.fillStyle=grad;roundRect(ctx,x,y+16,aW,barH,6,true); const grad2=ctx.createLinearGradient(x,0,x+bW,0);grad2.addColorStop(0,'#f59e0b');grad2.addColorStop(1,'#ef4444');ctx.fillStyle=grad2;roundRect(ctx,x,y+16+barH+5,bW,barH,6,true);ctx.fillStyle='#64748b';ctx.fillText(formatNumber(r.a),x+aW+6,y+16+barH-1);ctx.fillText(formatNumber(r.b),x+bW+6,y+16+barH*2+4);}); ctx.fillStyle='#4f46e5';ctx.fillRect(pad,10,10,10);ctx.fillStyle='#475569';ctx.fillText(legend[0],pad+14,19);ctx.fillStyle='#f59e0b';ctx.fillRect(pad+92,10,10,10);ctx.fillStyle='#475569';ctx.fillText(legend[1],pad+106,19);
+}
+function drawRisk(canvasId,rows){
+  const canvas=document.getElementById(canvasId); if(!canvas) return; const parent=canvas.parentElement; const dpr=window.devicePixelRatio||1; canvas.width=parent.clientWidth*dpr; canvas.height=parent.clientHeight*dpr; const ctx=canvas.getContext('2d'); ctx.scale(dpr,dpr); const w=parent.clientWidth,h=parent.clientHeight; ctx.clearRect(0,0,w,h); const pad=34; const max=100; const rowH=(h-pad*2)/(rows.length||1); ctx.font='12px '+getComputedStyle(document.body).fontFamily; rows.forEach((r,i)=>{const y=pad+i*rowH; ctx.fillStyle='#475569';ctx.fillText((r.label||'').slice(0,18),w-pad-150,y+17); const areaW=w-pad*2-170; const x=pad; ctx.fillStyle='#e2e8f0';roundRect(ctx,x,y+4,areaW,16,8,true); const bw=(r.score/max)*areaW; const grad=ctx.createLinearGradient(x,0,x+bw,0);grad.addColorStop(0,'#10b981');grad.addColorStop(.55,'#f59e0b');grad.addColorStop(1,'#ef4444');ctx.fillStyle=grad;roundRect(ctx,x,y+4,bw,16,8,true);ctx.fillStyle='#0f172a';ctx.fillText(r.score+'/100',x+bw+6,y+17);});
+}
+function roundRect(ctx,x,y,w,h,r,fill){if(w<0)w=0;ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();if(fill)ctx.fill();}
+
+
+function addAssumedMarketData(show=true){
+  // افتراضات تجارية أولية لاختبار النظام: قطاعات متنوعة، قيم سلة مختلفة، وحركة نقاط متفاوتة.
+  const preset = [
+    ['TechZone Electronics','إلكترونيات',220,24,10,45,135,220,26,74,8,6,7.8,16,'سلة عالية، مناسب لسيناريو صرف جزئي للنقاط'],
+    ['Burger Hub','مطاعم',18,38,12,55,680,18,45,55,18,14,9.5,28,'تكرار شراء عالي وجاذبية صرف مرتفعة'],
+    ['CarePlus Pharmacy','صيدليات',24,20,8,50,420,24,30,70,9,5,6.7,14,'زيارات متكررة لكن سلوك صرف متوسط'],
+    ['Moda Fashion','أزياء',75,42,15,40,210,75,34,66,14,11,8.2,23,'قطاع جذاب للصرف خصوصاً بالعروض'],
+    ['Family Market','سوبرماركت',42,18,7,60,920,42,40,60,10,7,8.7,18,'حركة عالية وسلة متوسطة'],
+    ['Glow Beauty','تجميل',55,45,14,45,260,55,36,64,13,10,8.0,22,'هامش جيد وجاذبية صرف جيدة'],
+    ['Kids Planet','أطفال',65,36,11,50,180,65,31,69,12,9,7.6,21,'قطاع عائلي قابل للتكرار'],
+    ['Cinema Plus','ترفيه',30,33,13,45,390,30,43,57,16,13,9.0,25,'جاذبية صرف عالية وحملات Push فعالة'],
+    ['Skill Academy','تعليم',120,30,9,35,85,120,18,82,7,4,5.8,12,'سلة أعلى وتكرار أقل'],
+    ['AutoCare Services','خدمات',90,32,10,40,120,90,24,76,8,6,6.4,15,'خدمات دورية وحساسية سعر متوسطة']
+  ];
+  app.settings = {pointValue:1, globalCap:50, redemptionUtil:80, circulationRate:75, worstStress:35, bestRelief:35};
+  app.stores = preset.map(r=>({id:uid(),name:r[0],sector:r[1],price:r[2],profitPct:r[3],commissionPct:r[4],rewardPct:r[5],customCap:'',notes:r[14]}));
+  app.volume = {};
+  app.stores.forEach((s,i)=>{
+    const r=preset[i];
+    app.volume[s.id]={transactions:r[6],avgBasket:r[7],redeemUsersPct:r[8],earnOnlyPct:r[9],newCustomersPct:r[10],pushLiftPct:r[11],attractiveness:r[12],selfRetentionPct:r[13]};
+  });
+  buildSmartMatrix();
+  currentScenario='expected';
+  if(show) toast('تم تحميل بيانات افتراضية موسعة وحساب المصفوفة تلقائياً');
+  renderAll(false);
+}
+
+function partnerNarrative(p, scenario, period){
+  const riskText = p.risk.key==='low' ? 'منخفض' : p.risk.key==='medium' ? 'متوسط' : p.risk.key==='high' ? 'مرتفع' : 'حرج';
+  const netDirection = p.netJod >= 0 ? 'إيجابي' : 'سلبي';
+  const absNet = Math.abs(p.netJod);
+  const action = p.risk.key==='low' ?
+    'الاستمرار بنفس الإعدادات مع مراقبة دورية لحركة النقاط.' :
+    p.risk.key==='medium' ? 'تفعيل Push خفيف أو عرض محدود لرفع الشراء النقدي.' :
+    p.risk.key==='high' ? 'تفعيل Push Campaign واضح لمدة قصيرة لزيادة الزيارات والمشتريات النقدية.' :
+    'تدخل فوري عبر Push قوي، ومراجعة حد صرف النقاط أو توزيع المصفوفة مؤقتاً.';
+  return `
+    <h3 style="font-size:24px;margin-bottom:8px">تقرير شريك: ${escapeHtml(p.store.name)}</h3>
+    <p class="hint">الفترة: ${escapeHtml(period)} | السيناريو: ${escapeHtml(scenario)} | القطاع: ${escapeHtml(p.store.sector)}</p>
+    <div class="notice good"><b>الرسالة الأساسية للشريك:</b> النقاط ليست خصمًا إضافيًا دائمًا على المتجر؛ قيمة النقاط المصروفة يتم تغطيتها من نموذج عمولة الشركة. المتجر يستفيد من تحفيز العملاء، وزيادة احتمالية تكرار الشراء، وجذب زيارات إضافية.</div>
+    <div class="grid three" style="margin-top:14px">
+      <div class="notice"><b>المبيعات المتوقعة:</b><br>${money(p.totalSales)}</div>
+      <div class="notice"><b>قيمة النقاط الصادرة:</b><br>${money(p.issuedJod)}</div>
+      <div class="notice"><b>قيمة النقاط المصروفة لديه:</b><br>${money(p.redeemedJod)}</div>
+    </div>
+    <div class="sep"></div>
+    <h3>تفسير السيناريو</h3>
+    <p class="hint" style="font-size:14px;color:#334155">في هذا السيناريو، صافي حركة النقاط لدى المتجر ${netDirection} بقيمة ${money(absNet)}. مستوى الخطر التجاري الحالي: <b>${riskText}</b>. هذا لا يعني خسارة مباشرة بنفس القيمة، بل يعني أن المتجر قد يصبح مركزًا لصرف النقاط أكثر من كونه مصدرًا لإصدارها، لذلك نستخدم Push Campaign لإعادة التوازن وزيادة المشتريات النقدية.</p>
+    <h3>الإجراء المقترح</h3>
+    <div class="notice warn">${action}</div>
+    <h3 style="margin-top:16px">صياغة مقنعة للاجتماع</h3>
+    <div class="notice">البرنامج مصمم بحيث لا يرى العميل النقاط كخصم عشوائي، بل كحافز للعودة والشراء. وفي حال ارتفع صرف النقاط داخل متجرك، نستطيع دعمك عبر حملات Push موجهة لزيادة الطلب النقدي وإعادة التوازن بين النقاط المكتسبة والمصروفة.</div>
+  `;
+}
+
+function renderPartnerView(){
+  const sel=document.getElementById('partnerStore');
+  if(!sel) return;
+  const current=sel.value;
+  sel.innerHTML=app.stores.map(s=>`<option value="${s.id}" ${s.id===current?'selected':''}>${escapeHtml(s.name)}</option>`).join('');
+  const selectedId=sel.value || app.stores[0]?.id;
+  if(selectedId && !sel.value) sel.value=selectedId;
+  const scenario=document.getElementById('partnerScenario')?.value || 'expected';
+  const period=document.getElementById('partnerPeriod')?.value || 'شهري';
+  const kpis=document.getElementById('partnerMiniKpis');
+  const report=document.getElementById('partnerReport');
+  if(!selectedId){
+    if(kpis) kpis.innerHTML='<div class="empty">لا توجد متاجر.</div>';
+    if(report) report.innerHTML='<div class="empty">أضف المتاجر أولاً.</div>';
+    return;
+  }
+  const data=calculateScenario(scenario);
+  const p=data.per[selectedId];
+  if(!p) return;
+  if(kpis){
+    kpis.innerHTML=`
+      <div class="kpi"><span>Risk</span><strong><span class="badge ${p.risk.key}">${p.risk.label}</span></strong></div>
+      <div class="kpi"><span>Risk Score</span><strong>${p.risk.score}/100</strong></div>
+      <div class="kpi"><span>صافي النقاط</span><strong style="color:${p.netJod<0?'#dc2626':'#16a34a'}">${points(p.netPoints)}</strong></div>
+      <div class="kpi"><span>Push Action</span><strong style="font-size:16px">${escapeHtml(p.pushNeed)}</strong></div>`;
+  }
+  if(report) report.innerHTML=partnerNarrative(p,scenario,period);
+}
+
+async function copyPartnerReport(){
+  const el=document.getElementById('partnerReport');
+  if(!el) return;
+  const text=el.innerText || '';
+  await navigator.clipboard.writeText(text);
+  toast('تم نسخ تقرير الشريك');
+}
+
+
+function getDecisionClass(decision){
+  if(decision.includes('Accept')) return decision.includes('Conditions')?'conditions':'accept';
+  if(decision.includes('Negotiate')) return 'negotiate';
+  return 'reject';
+}
+function getPartnerDecision(row){
+  const p=row.p;
+  const v=ensureVolumeEntry(p.store);
+  const riskPenalty=p.risk.score;
+  const profitScore=clamp(row.retention,0,100);
+  const marginScore=clamp(row.margin*8,0,100);
+  const trafficScore=clamp(Math.sqrt(Math.max(p.totalTx,0))*7,0,100);
+  const attractionScore=clamp(n(v.attractiveness,6)*10,0,100);
+  const netScore=p.netJod>=0?85:clamp(70+(p.netJod/Math.max(p.issuedJod,1))*35,0,70);
+  const score=Math.round(profitScore*.30 + marginScore*.15 + trafficScore*.15 + attractionScore*.15 + netScore*.15 + (100-riskPenalty)*.10);
+  let decision='Reject / Do not prioritize';
+  let reason='الخطر أو هامش الربح لا يبرر التعاقد بنفس الشروط.';
+  if(score>=76 && !['high','critical'].includes(p.risk.key)){decision='Accept';reason='هامش جيد، خطر منخفض، وحركة نقاط متوازنة.';}
+  else if(score>=62){decision='Accept with Conditions';reason='مناسب لكن يحتاج حد صرف أو مراقبة Push أو شروط واضحة.';}
+  else if(score>=46){decision='Negotiate Commission';reason='يمكن قبوله بعد رفع العمولة أو خفض المكافأة أو تقليل حد الصرف.';}
+  const breakEvenPct=p.totalSales?Math.max(row.issuedCost,row.redeemedCost)/p.totalSales*100:0;
+  const suggestedCommission=Math.max(n(p.store.commissionPct), breakEvenPct+2);
+  return {score,decision,reason,className:getDecisionClass(decision),breakEvenPct,suggestedCommission};
+}
+function renderEvaluation(){
+  const kpis=document.getElementById('evaluationKpis');
+  if(!kpis) return;
+  const {rows,totals}=getProfitMetrics(currentScenario);
+  const decisions=rows.map(r=>({row:r,...getPartnerDecision(r)}));
+  const counts={accept:0,conditions:0,negotiate:0,reject:0};
+  decisions.forEach(d=>counts[d.className]=(counts[d.className]||0)+1);
+  const avgScore=decisions.length?decisions.reduce((a,d)=>a+d.score,0)/decisions.length:0;
+  kpis.innerHTML=`
+    <div class="decision-card good"><span>Accept</span><strong>${counts.accept||0}</strong></div>
+    <div class="decision-card"><span>Accept with Conditions</span><strong>${counts.conditions||0}</strong></div>
+    <div class="decision-card warn"><span>Negotiate</span><strong>${counts.negotiate||0}</strong></div>
+    <div class="decision-card bad"><span>Average Score</span><strong>${formatNumber(avgScore)}/100</strong></div>`;
+  const insights=document.getElementById('evaluationInsights');
+  if(insights){
+    const best=decisions.slice().sort((a,b)=>b.score-a.score)[0];
+    const worst=decisions.slice().sort((a,b)=>a.score-b.score)[0];
+    const highRisk=decisions.filter(d=>['high','critical'].includes(d.row.p.risk.key)).length;
+    insights.innerHTML=decisions.length?`
+      <div class="insight-card"><h4>أفضل مرشح</h4><p><b>${escapeHtml(best.row.p.store.name)}</b> حصل على ${best.score}/100. القرار: <span class="decision-chip ${best.className}">${best.decision}</span></p></div>
+      <div class="insight-card"><h4>أعلى نقطة تحتاج انتباه</h4><p><b>${escapeHtml(worst.row.p.store.name)}</b> يحتاج مراجعة؛ السبب: ${escapeHtml(worst.reason)}</p></div>
+      <div class="insight-card"><h4>ضغط الشبكة</h4><p>عدد المتاجر High/Critical في هذا السيناريو: <b>${highRisk}</b>. صافي ربح الشركة المحافظ: <b>${money(totals.conservativeNet)}</b>.</p></div>`:'<div class="empty">لا توجد بيانات.</div>';
+  }
+  const be=document.getElementById('breakEvenCards');
+  if(be){
+    be.innerHTML=decisions.slice().sort((a,b)=>b.breakEvenPct-a.breakEvenPct).slice(0,5).map(d=>`<div class="break-even-card"><b>${escapeHtml(d.row.p.store.name)}</b><p>Break-even تقريباً: <b>${formatNumber(d.breakEvenPct)}%</b> | العمولة الحالية: <b>${formatNumber(d.row.p.store.commissionPct)}%</b> | المقترح الآمن: <b>${formatNumber(d.suggestedCommission)}%</b></p></div>`).join('') || '<div class="empty">لا توجد بيانات.</div>';
+  }
+  const table=document.getElementById('evaluationTable');
+  if(table){
+    table.innerHTML=`<thead><tr><th>المتجر</th><th>القطاع</th><th>Score</th><th>القرار</th><th>Risk</th><th>صافي محافظ</th><th>Break-even %</th><th>عمولة حالية %</th><th>عمولة مقترحة %</th><th>السبب/الشرط</th></tr></thead><tbody>`+
+    decisions.sort((a,b)=>b.score-a.score).map(d=>`<tr>
+      <td><b>${escapeHtml(d.row.p.store.name)}</b></td><td>${escapeHtml(d.row.p.store.sector)}</td>
+      <td><div class="score-ring" style="--score:${d.score}"><span>${d.score}</span></div></td>
+      <td><span class="decision-chip ${d.className}">${d.decision}</span></td>
+      <td><span class="badge ${d.row.p.risk.key}">${d.row.p.risk.label}</span></td>
+      <td class="${d.row.conservativeNet>=0?'good-num':'bad-num'}">${money(d.row.conservativeNet)}</td>
+      <td>${formatNumber(d.breakEvenPct)}%</td><td>${formatNumber(d.row.p.store.commissionPct)}%</td><td>${formatNumber(d.suggestedCommission)}%</td>
+      <td>${escapeHtml(d.reason)}</td>
+    </tr>`).join('')+'</tbody>';
+  }
+}
+function renderPartnerPitch(keepText=false){
+  const sel=document.getElementById('pitchStore');
+  if(!sel) return;
+  const current=sel.value;
+  sel.innerHTML=app.stores.map(s=>`<option value="${s.id}" ${s.id===current?'selected':''}>${escapeHtml(s.name)}</option>`).join('');
+  const selectedId=sel.value || app.stores[0]?.id;
+  if(selectedId && !sel.value) sel.value=selectedId;
+  const scenario=document.getElementById('pitchScenario')?.value || 'expected';
+  const data=calculateScenario(scenario);
+  const p=data.per[selectedId];
+  const preview=document.getElementById('pitchPreview');
+  const textBox=document.getElementById('pitchText');
+  if(!p){if(preview) preview.innerHTML='<div class="empty">لا توجد بيانات.</div>';return;}
+  const row=getProfitMetrics(scenario).rows.find(r=>r.id===selectedId);
+  const dec=getPartnerDecision(row);
+  const message=document.getElementById('pitchMessage')?.value || '';
+  const netText=p.netJod>=0?'متوازن وإيجابي':'يحتاج إدارة عبر Push Campaign';
+  if(preview){
+    preview.innerHTML=`<div style="position:relative;z-index:1"><span class="pill" style="background:rgba(255,255,255,.16);color:#fff">Partner Pitch</span><h2>${escapeHtml(p.store.name)}</h2><p>${escapeHtml(message)}</p>
+      <div class="pitch-metrics"><div class="pitch-metric"><span>مبيعات متوقعة</span><strong>${money(p.totalSales)}</strong></div><div class="pitch-metric"><span>Risk</span><strong>${p.risk.label}</strong></div><div class="pitch-metric"><span>Decision</span><strong>${dec.decision}</strong></div></div>
+      <div class="pitch-point"><b>أفضل قيمة للشريك:</b> زيادة تكرار الشراء وجذب زيارات إضافية بدون تحويل النقاط إلى خصم عشوائي دائم.</div>
+      <div class="pitch-point"><b>أسوأ سيناريو:</b> ارتفاع صرف النقاط داخل المتجر. الحل: Push موجه، تعديل مؤقت لحد الصرف، أو Campaign لزيادة الدفع النقدي.</div>
+      <div class="pitch-point"><b>الوضع الحالي:</b> صافي حركة النقاط ${netText} بقيمة ${money(p.netJod)}.</div></div>`;
+  }
+  const pitchText=`${p.store.name}\n\nلماذا الانضمام مفيد؟\n- البرنامج يحول جزءاً من عمولة المنصة إلى حافز للعميل، بدل أن يكون الخصم عبئاً دائماً على المتجر.\n- المتجر يستفيد من زيادة الزيارات وتكرار الشراء.\n- في حال ارتفع صرف النقاط، يمكن إعادة التوازن عبر Push Campaign وعروض موجهة.\n\nالأرقام المختصرة حسب سيناريو ${scenario}:\n- المبيعات المتوقعة: ${money(p.totalSales)}\n- النقاط الصادرة: ${money(p.issuedJod)}\n- النقاط المصروفة داخل المتجر: ${money(p.redeemedJod)}\n- صافي حركة النقاط: ${money(p.netJod)}\n- مستوى الخطر: ${p.risk.label}\n- القرار المقترح: ${dec.decision}\n\nالإجراء المقترح: ${p.pushNeed}`;
+  if(textBox) textBox.textContent=pitchText;
+}
+async function copyPitchText(){
+  const t=document.getElementById('pitchText')?.innerText || '';
+  await navigator.clipboard.writeText(t);
+  toast('تم نسخ نص العرض');
+}
+function getStressInputs(){
+  const val=(id,fb)=>n(document.getElementById(id)?.value,fb);
+  return {cap:val('stressCap',app.settings.globalCap),util:val('stressUtil',app.settings.redemptionUtil),circ:val('stressCirc',app.settings.circulationRate),rewardAdj:val('stressReward',0),txAdj:val('stressTx',0),worst:val('stressWorst',app.settings.worstStress)};
+}
+function calculateScenarioAdjusted(type,adj){
+  const backup=JSON.stringify(app);
+  app.settings={...app.settings,globalCap:adj.cap,redemptionUtil:adj.util,circulationRate:adj.circ,worstStress:adj.worst};
+  app.stores=app.stores.map(s=>({...s,rewardPct:Math.max(0,n(s.rewardPct)*(1+adj.rewardAdj/100))}));
+  Object.keys(app.volume).forEach(id=>{app.volume[id]={...app.volume[id],transactions:Math.max(0,n(app.volume[id].transactions)*(1+adj.txAdj/100))};});
+  const out=calculateScenario(type);
+  app=JSON.parse(backup);
+  ensureShape();
+  return out;
+}
+function renderStressTest(keep=false){
+  if(!document.getElementById('stressComparison')) return;
+  const adj=getStressInputs();
+  const labels=[['stressCapVal',adj.cap+'%'],['stressUtilVal',adj.util+'%'],['stressCircVal',adj.circ+'%'],['stressRewardVal',(adj.rewardAdj>0?'+':'')+adj.rewardAdj+'%'],['stressTxVal',(adj.txAdj>0?'+':'')+adj.txAdj+'%'],['stressWorstVal',adj.worst+'%']];
+  labels.forEach(([id,val])=>{const el=document.getElementById(id);if(el)el.textContent=val;});
+  const base=getProfitMetrics(currentScenario);
+  const stressedData=calculateScenarioAdjusted(currentScenario,adj);
+  const stressedRows=stressedData.ids.map(id=>{
+    const p=stressedData.per[id];
+    const grossCommission=p.commissionOnOriginal, issuedCost=p.issuedJod, redeemedCost=p.redeemedJod;
+    const conservativeNet=grossCommission-Math.max(issuedCost,redeemedCost);
+    return {id,p,conservativeNet,issuedCost,redeemedCost,grossCommission};
+  });
+  const stressedTotals=stressedRows.reduce((a,r)=>{a.sales+=r.p.totalSales;a.grossCommission+=r.grossCommission;a.issuedCost+=r.issuedCost;a.redeemedCost+=r.redeemedCost;a.conservativeNet+=r.conservativeNet;return a;},{sales:0,grossCommission:0,issuedCost:0,redeemedCost:0,conservativeNet:0});
+  const baseHigh=base.rows.filter(r=>['high','critical'].includes(r.p.risk.key)).length;
+  const stressHigh=stressedRows.filter(r=>['high','critical'].includes(r.p.risk.key)).length;
+  const comp=document.getElementById('stressComparison');
+  const row=(label,baseVal,stressVal,formatter=money)=>{const diff=stressVal-baseVal;const cls=diff>=0?'good':'bad';return `<div class="compare-row"><b>${label}</b><div class="track"><span class="${cls==='good'?'profit':'loss'}" style="width:${Math.min(100,Math.max(4,Math.abs(diff)/(Math.max(Math.abs(baseVal),Math.abs(stressVal),1))*100))}%"></span></div><span class="delta ${cls}">${formatter(diff)}</span></div>`};
+  comp.innerHTML=row('صافي ربح محافظ',base.totals.conservativeNet,stressedTotals.conservativeNet)+row('عمولة الشركة',base.totals.grossCommission,stressedTotals.grossCommission)+row('النقاط الصادرة',base.totals.issuedCost,stressedTotals.issuedCost)+row('النقاط المصروفة',base.totals.redeemedCost,stressedTotals.redeemedCost)+row('متاجر High/Critical',baseHigh,stressHigh,v=>String(v));
+  const riskList=document.getElementById('stressRiskList');
+  riskList.innerHTML=stressedRows.sort((a,b)=>b.p.risk.score-a.p.risk.score).slice(0,5).map(r=>`<div class="insight-card"><h4>${escapeHtml(r.p.store.name)} <span class="badge ${r.p.risk.key}">${r.p.risk.label}</span></h4><p>صافي النقاط: <b>${money(r.p.netJod)}</b> | صافي ربح محافظ: <b>${money(r.conservativeNet)}</b><br>${escapeHtml(r.p.pushNeed)}</p></div>`).join('') || '<div class="empty">لا توجد بيانات.</div>';
+  const advice=document.getElementById('stressAdvice');
+  const profitDrop=stressedTotals.conservativeNet-base.totals.conservativeNet;
+  advice.className='notice '+(profitDrop<0||stressHigh>baseHigh?'warn':'good');
+  advice.innerHTML=profitDrop<0||stressHigh>baseHigh?`الاختبار يظهر ضغطاً إضافياً على الربحية أو ارتفاعاً في المتاجر عالية الخطر. التوصية: خفّض حد الصرف، قلل المكافآت مؤقتاً، أو فعّل Push للمتاجر الأعلى خطراً قبل توسيع الشبكة.`:`الاختبار مقبول: الربحية لم تتدهور بشكل واضح، وعدد المتاجر عالية الخطر تحت السيطرة. يمكن استخدام هذه الافتراضات كحالة تفاوضية مريحة.`;
+}
+function exportEvaluationCSV(){
+  const {rows}=getProfitMetrics(currentScenario);
+  const out=[['Scenario','Store','Sector','Score','Decision','Risk','Conservative Net','Break-even %','Current Commission %','Suggested Commission %','Reason']];
+  rows.forEach(r=>{const d=getPartnerDecision(r);out.push([currentScenario,r.p.store.name,r.p.store.sector,d.score,d.decision,r.p.risk.label,r.conservativeNet,d.breakEvenPct,r.p.store.commissionPct,d.suggestedCommission,d.reason]);});
+  downloadFile(`partner-evaluation-${currentScenario}.csv`,out.map(r=>r.map(csvEscape).join(',')).join('\n'),'text/csv');
+}
+
+
+function cloneState(state=app){return JSON.parse(JSON.stringify(state));}
+function scenarioId(){return 'sc_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2,7)}
+function saveScenarioLibrary(show=true){ if(show) toast('تم تحديث مكتبة السيناريوهات'); if(window.scheduleCloudAutosave) window.scheduleCloudAutosave('scenario-library'); }
+function loadScenarioLibrary(show=true){
+  const raw=localStorage.getItem(SCENARIO_LIBRARY_KEY);
+  if(!raw){scenarioLibrary=[]; if(show) toast('لا توجد مكتبة محفوظة'); return;}
+  try{scenarioLibrary=JSON.parse(raw); if(!Array.isArray(scenarioLibrary)) scenarioLibrary=[]; if(show) toast('تم تحميل مكتبة السيناريوهات');}
+  catch(e){scenarioLibrary=[]; if(show) toast('تعذر تحميل مكتبة السيناريوهات');}
+}
+function withTemporaryState(state, fn){
+  const backup=cloneState(app);
+  app=cloneState(state); ensureShape(); syncVolumeWithStoresNoRender();
+  try{return fn();}
+  finally{app=backup; ensureShape(); syncVolumeWithStoresNoRender();}
+}
+function getScenarioMetrics(state, type='expected'){
+  return withTemporaryState(state,()=>{
+    const data=calculateScenario(type);
+    const profit=getProfitMetrics(type);
+    const evalRows=profit.rows.map(r=>({row:r,...getPartnerDecision(r)}));
+    const highRisk=profit.rows.filter(r=>['high','critical'].includes(r.p.risk.key)).length;
+    const avgRisk=profit.rows.length?profit.rows.reduce((a,r)=>a+r.p.risk.score,0)/profit.rows.length:0;
+    const avgScore=evalRows.length?evalRows.reduce((a,d)=>a+d.score,0)/evalRows.length:0;
+    const decisions={accept:0,conditions:0,negotiate:0,reject:0};
+    evalRows.forEach(d=>decisions[d.className]=(decisions[d.className]||0)+1);
+    const sectorsUsed=[...new Set(app.stores.map(s=>s.sector))];
+    const sectorCounts={}; app.stores.forEach(s=>sectorCounts[s.sector]=(sectorCounts[s.sector]||0)+1);
+    const topStore=profit.rows.slice().sort((a,b)=>b.conservativeNet-a.conservativeNet)[0]?.p?.store?.name || '-';
+    let strategicDecision='غير كافٍ';
+    if(profit.totals.conservativeNet>0 && highRisk===0 && avgScore>=70) strategicDecision='مناسب للإطلاق';
+    else if(profit.totals.conservativeNet>0 && avgScore>=58) strategicDecision='مناسب بشروط';
+    else if(profit.totals.conservativeNet>0) strategicDecision='تفاوض قبل الإطلاق';
+    else strategicDecision='غير مناسب حالياً';
+    return {
+      type, stores:app.stores.length, sectors:sectorsUsed.join(' + '), sectorCounts, sales:profit.totals.sales,
+      grossCommission:profit.totals.grossCommission, issuedCost:profit.totals.issuedCost, redeemedCost:profit.totals.redeemedCost,
+      conservativeNet:profit.totals.conservativeNet, margin:profit.totals.sales?profit.totals.conservativeNet/profit.totals.sales*100:0,
+      highRisk, avgRisk, avgScore, decisions, topStore, strategicDecision
+    };
+  });
+}
+function matrixSubsetForState(sourceApp, ids){
+  const m={};
+  ids.forEach(from=>{m[from]={};ids.forEach(to=>m[from][to]=n(sourceApp.matrix?.[from]?.[to],0)); let sum=ids.reduce((a,to)=>a+n(m[from][to]),0); if(sum<=0){ids.forEach(to=>m[from][to]=+(100/ids.length).toFixed(2));} else {ids.forEach(to=>m[from][to]=+(m[from][to]*100/sum).toFixed(2)); const adjusted=ids.reduce((a,to)=>a+n(m[from][to]),0); if(ids.length) m[from][ids[ids.length-1]]=+(n(m[from][ids[ids.length-1]])+(100-adjusted)).toFixed(2);} });
+  return m;
+}
+function buildScenarioStateFromSectors(name, sectorList, overrides={}){
+  const base=cloneState(app);
+  const selected=base.stores.filter(s=>sectorList.includes(s.sector));
+  const fallback=base.stores.slice(0,Math.min(5,base.stores.length));
+  const stores=(selected.length?selected:fallback).map(s=>({...s}));
+  const ids=stores.map(s=>s.id);
+  const volume={}; ids.forEach(id=>{volume[id]={...(base.volume[id]||{})};});
+  const state={settings:{...base.settings,...(overrides.settings||{})},stores,volume,matrix:matrixSubsetForState(base,ids)};
+  if(overrides.rewardAdjust){state.stores=state.stores.map(s=>({...s,rewardPct:clamp(n(s.rewardPct)+overrides.rewardAdjust,5,100)}));}
+  if(overrides.txAdjust){Object.keys(state.volume).forEach(id=>state.volume[id].transactions=Math.max(1,Math.round(n(state.volume[id].transactions)*(1+overrides.txAdjust/100))));}
+  if(overrides.redeemAdjust){Object.keys(state.volume).forEach(id=>state.volume[id].redeemUsersPct=clamp(n(state.volume[id].redeemUsersPct)+overrides.redeemAdjust,0,100));}
+  return state;
+}
+function addScenarioToLibrary(name, state, type='expected', source='manual'){
+  const metrics=getScenarioMetrics(state,type);
+  scenarioLibrary.unshift({id:scenarioId(),name:name||`سيناريو ${scenarioLibrary.length+1}`,createdAt:new Date().toISOString(),type,source,state:cloneState(state),metrics});
+  scenarioLibrary=scenarioLibrary.slice(0,30);
+  saveScenarioLibrary(false);
+  renderScenarioLibrary();
+}
+function saveCurrentScenarioToLibrary(){
+  const name=(document.getElementById('scenarioName')?.value || '').trim() || `دراسة محفوظة ${new Date().toLocaleDateString('ar-JO')}`;
+  const type=document.getElementById('scenarioTypeToSave')?.value || currentScenario || 'expected';
+  addScenarioToLibrary(name,cloneState(app),type,'manual');
+  const input=document.getElementById('scenarioName'); if(input) input.value='';
+  toast('تم حفظ السيناريو الحالي');
+}
+function generateSuggestedScenarios(){
+  if(!app.stores.length){toast('أضف بيانات أولاً');return;}
+  const suggestions=[
+    ['مطاعم وترفيه',['مطاعم','ترفيه'],{txAdjust:10,redeemAdjust:5}],
+    ['صيدليات وتجميل',['صيدليات','تجميل'],{settings:{globalCap:40,redemptionUtil:70},redeemAdjust:-5}],
+    ['مول كامل',['أزياء','إلكترونيات','مطاعم','تجميل','ترفيه'],{txAdjust:15,redeemAdjust:8}],
+    ['أساسيات منخفضة الخطر',['سوبرماركت','صيدليات','خدمات'],{settings:{globalCap:35,redemptionUtil:65,circulationRate:65},rewardAdjust:-8}],
+    ['نمو هجومي',['مطاعم','أزياء','إلكترونيات','ترفيه','أطفال'],{settings:{globalCap:60,redemptionUtil:90,circulationRate:90},rewardAdjust:10,txAdjust:25,redeemAdjust:12}],
+    ['أطفال وتعليم',['أطفال','تعليم','ترفيه'],{settings:{globalCap:45,redemptionUtil:75},txAdjust:8}]
+  ];
+  suggestions.forEach(([name,sectors,overrides])=>addScenarioToLibrary(name,buildScenarioStateFromSectors(name,sectors,overrides),'expected','suggested'));
+  toast('تم بناء السيناريوهات المقترحة');
+}
+function refreshScenarioMetrics(){
+  scenarioLibrary=scenarioLibrary.map(sc=>({...sc,metrics:getScenarioMetrics(sc.state,sc.type||'expected')}));
+  saveScenarioLibrary(false);
+}
+function loadScenarioFromLibrary(id){
+  const sc=scenarioLibrary.find(x=>x.id===id); if(!sc) return;
+  app=cloneState(sc.state); ensureShape(); currentScenario=sc.type||'expected'; saveData(); renderAll(); showSection('dashboard'); toast('تم تحميل السيناريو: '+sc.name);
+}
+function duplicateScenario(id){
+  const sc=scenarioLibrary.find(x=>x.id===id); if(!sc) return;
+  addScenarioToLibrary(sc.name+' - نسخة',sc.state,sc.type||'expected','copy');
+}
+function deleteScenario(id){
+  if(!confirm('حذف هذا السيناريو من المكتبة؟')) return;
+  scenarioLibrary=scenarioLibrary.filter(x=>x.id!==id); saveScenarioLibrary(false); renderScenarioLibrary(); toast('تم حذف السيناريو');
+}
+function clearScenarioLibrary(){
+  if(!confirm('مسح كل السيناريوهات المحفوظة؟')) return;
+  scenarioLibrary=[]; saveScenarioLibrary(false); renderScenarioLibrary(); toast('تم مسح المكتبة');
+}
+function getSortedLibrary(){return scenarioLibrary.slice().map(sc=>({...sc,metrics:sc.metrics||getScenarioMetrics(sc.state,sc.type||'expected')}));}
+function renderScenarioLibrary(){
+  if(!document.getElementById('libraryKpis')) return;
+  if(scenarioLibrary.length){refreshScenarioMetrics();}
+  const lib=getSortedLibrary();
+  const bestProfit=lib.slice().sort((a,b)=>b.metrics.conservativeNet-a.metrics.conservativeNet)[0];
+  const safest=lib.slice().sort((a,b)=>(a.metrics.highRisk-b.metrics.highRisk)||(a.metrics.avgRisk-b.metrics.avgRisk))[0];
+  const balanced=lib.slice().sort((a,b)=>((b.metrics.conservativeNet>0?1:0)-(a.metrics.conservativeNet>0?1:0))||(b.metrics.avgScore-a.metrics.avgScore)||(a.metrics.avgRisk-b.metrics.avgRisk))[0];
+  const k=document.getElementById('libraryKpis');
+  k.innerHTML=`<div class="kpi"><span>سيناريوهات محفوظة</span><strong>${lib.length}</strong></div><div class="kpi"><span>أفضل صافي ربح</span><strong>${bestProfit?money(bestProfit.metrics.conservativeNet):'-'}</strong></div><div class="kpi"><span>أقل خطر</span><strong>${safest?formatNumber(safest.metrics.avgRisk)+'/100':'-'}</strong></div><div class="kpi"><span>أفضل Balanced</span><strong style="font-size:18px">${balanced?escapeHtml(balanced.name):'-'}</strong></div>`;
+  const rec=document.getElementById('libraryRecommendations');
+  if(rec){
+    rec.innerHTML=lib.length?`<div class="recommendation-tile"><h4>الأكثر ربحاً</h4><strong>${escapeHtml(bestProfit.name)}</strong><p>صافي ربح محافظ: <b>${money(bestProfit.metrics.conservativeNet)}</b><br>القرار: ${escapeHtml(bestProfit.metrics.strategicDecision)}</p></div><div class="recommendation-tile"><h4>الأقل خطراً</h4><strong>${escapeHtml(safest.name)}</strong><p>High/Critical: <b>${safest.metrics.highRisk}</b><br>متوسط الخطر: <b>${formatNumber(safest.metrics.avgRisk)}/100</b></p></div><div class="recommendation-tile"><h4>أفضل نقطة بداية</h4><strong>${escapeHtml(balanced.name)}</strong><p>Average Score: <b>${formatNumber(balanced.metrics.avgScore)}/100</b><br>القطاعات: ${escapeHtml(balanced.metrics.sectors)}</p></div>`:'<div class="empty">احفظ سيناريو أو ابنِ سيناريوهات مقترحة.</div>';
+  }
+  renderCurrentDecisionMap();
+  const table=document.getElementById('libraryTable');
+  if(table){
+    table.innerHTML=lib.length?`<thead><tr><th>السيناريو</th><th>النوع</th><th>المتاجر</th><th>القطاعات</th><th>المبيعات</th><th>صافي ربح الشركة</th><th>Margin</th><th>High/Critical</th><th>Avg Risk</th><th>Avg Score</th><th>القرار</th><th></th></tr></thead><tbody>`+
+      lib.sort((a,b)=>b.metrics.conservativeNet-a.metrics.conservativeNet).map(sc=>`<tr><td><b>${escapeHtml(sc.name)}</b><br><span class="mini">${new Date(sc.createdAt).toLocaleString('ar-JO')}</span></td><td>${escapeHtml(sc.type)}</td><td>${sc.metrics.stores}</td><td>${escapeHtml(sc.metrics.sectors)}</td><td>${money(sc.metrics.sales)}</td><td class="${sc.metrics.conservativeNet>=0?'good-num':'bad-num'}">${money(sc.metrics.conservativeNet)}</td><td>${formatNumber(sc.metrics.margin)}%</td><td>${sc.metrics.highRisk}</td><td>${formatNumber(sc.metrics.avgRisk)}/100</td><td>${formatNumber(sc.metrics.avgScore)}/100</td><td><span class="scenario-tag ${sc.metrics.highRisk>0?'risky':'safe'}">${escapeHtml(sc.metrics.strategicDecision)}</span></td><td><button class="btn small primary" onclick="loadScenarioFromLibrary('${sc.id}')">تحميل</button><button class="btn small" onclick="duplicateScenario('${sc.id}')">نسخ</button><button class="btn small danger" onclick="deleteScenario('${sc.id}')">حذف</button></td></tr>`).join('')+'</tbody>':'<tbody><tr><td class="empty">لا يوجد سيناريوهات محفوظة بعد.</td></tr></tbody>';
+  }
+  const cards=document.getElementById('scenarioCards');
+  if(cards){
+    cards.innerHTML=lib.length?lib.map(sc=>`<div class="scenario-card"><h4>${escapeHtml(sc.name)}</h4><div class="meta">${escapeHtml(sc.metrics.sectors)}<br>${sc.metrics.stores} متاجر | ${new Date(sc.createdAt).toLocaleDateString('ar-JO')}</div><span class="scenario-tag profit">${money(sc.metrics.conservativeNet)}</span><span class="scenario-tag ${sc.metrics.highRisk>0?'risky':'safe'}">Risk ${formatNumber(sc.metrics.avgRisk)}/100</span><div class="numline"><span>Avg Score</span><b>${formatNumber(sc.metrics.avgScore)}</b></div><div class="tiny-chart"><i style="width:${clamp(sc.metrics.avgScore,2,100)}%"></i></div><div class="actions"><button class="btn small primary" onclick="loadScenarioFromLibrary('${sc.id}')">فتح</button><button class="btn small" onclick="duplicateScenario('${sc.id}')">نسخ</button><button class="btn small danger" onclick="deleteScenario('${sc.id}')">حذف</button></div></div>`).join(''):'<div class="empty">استخدم زر بناء سيناريوهات مقترحة لتبدأ المقارنة.</div>';
+  }
+}
+function renderCurrentDecisionMap(){
+  const el=document.getElementById('currentDecisionMap'); if(!el) return;
+  const rows=getProfitMetrics(currentScenario).rows.map(r=>({row:r,...getPartnerDecision(r)}));
+  const groups={start:[],negotiate:[],watch:[],avoid:[]};
+  rows.forEach(d=>{if(d.className==='accept') groups.start.push(d); else if(d.className==='conditions') groups.watch.push(d); else if(d.className==='negotiate') groups.negotiate.push(d); else groups.avoid.push(d);});
+  const col=(key,title)=>`<div class="map-column ${key}"><h4>${title}</h4>${(groups[key]||[]).sort((a,b)=>b.score-a.score).map(d=>`<div class="map-item"><b>${escapeHtml(d.row.p.store.name)}</b><span>${escapeHtml(d.row.p.store.sector)} | Score ${d.score} | ${d.row.p.risk.label}</span><div class="tiny-chart"><i style="width:${d.score}%"></i></div></div>`).join('') || '<div class="map-item"><span>لا يوجد</span></div>'}</div>`;
+  el.innerHTML=col('start','Start With')+col('watch','Watch / Conditions')+col('negotiate','Negotiate')+col('avoid','Avoid');
+}
+function exportScenarioLibrary(){downloadFile('scenario-library.json',JSON.stringify(scenarioLibrary,null,2),'application/json');}
+function exportScenarioComparisonCSV(){
+  const lib=getSortedLibrary();
+  const rows=[['Scenario','Type','Stores','Sectors','Sales','Gross Commission','Issued Cost','Redeemed Cost','Conservative Net','Margin %','High/Critical','Avg Risk','Avg Score','Decision','Top Store']];
+  lib.forEach(sc=>rows.push([sc.name,sc.type,sc.metrics.stores,sc.metrics.sectors,sc.metrics.sales,sc.metrics.grossCommission,sc.metrics.issuedCost,sc.metrics.redeemedCost,sc.metrics.conservativeNet,sc.metrics.margin,sc.metrics.highRisk,sc.metrics.avgRisk,sc.metrics.avgScore,sc.metrics.strategicDecision,sc.metrics.topStore]));
+  downloadFile('scenario-comparison.csv',rows.map(r=>r.map(csvEscape).join(',')).join('\n'),'text/csv');
+}
+
+function generatePrompt(){
+  const data=calculateScenario(currentScenario);
+  const lang=document.getElementById('aiLanguage')?.value || 'Arabic';
+  const summary=data.ids.map(id=>{const p=data.per[id];return `- ${p.store.name} | Sector: ${p.store.sector} | Sales: ${formatNumber(p.totalSales)} JOD | Issued points value: ${formatNumber(p.issuedJod)} JOD | Redeemed points value: ${formatNumber(p.redeemedJod)} JOD | Net: ${formatNumber(p.netJod)} JOD | Risk: ${p.risk.label} | Suggested action: ${p.pushNeed}`;}).join('\n');
+  const prompt=`You are a business strategy analyst. Analyze this non-cash reward points simulation for a merchant network. Write the answer in ${lang}.\n\nContext:\n- Customer rewards are funded from the platform/company commission only.\n- The company commission is calculated on the original product price.\n- Customers earn new points only on the amount they pay in cash/card, not on points redeemed.\n- Merchants are compensated by the company for the points redeemed at their stores.\n- Maximum redemption cap: ${app.settings.globalCap}% of item value.\n- Point value: 1 point = ${app.settings.pointValue} JOD.\n- Current scenario: ${currentScenario}.\n\nTasks:\n1) Explain the overall system health.\n2) Identify the riskiest merchants and why.\n3) Explain the worst-case concern in a way that can convince merchants.\n4) Recommend Push Campaign actions for each risky merchant.\n5) Provide a short executive summary suitable for a presentation.\n\nData:\n${summary}\n\nKeep the response practical, commercial, and easy to present.`;
+  document.getElementById('aiPrompt').value=prompt;
+  document.getElementById('aiOutput').textContent='تم توليد الـ Prompt. يمكنك نسخه أو تشغيل Gemini.';
+  return prompt;
+}
+async function copyPrompt(){const p=document.getElementById('aiPrompt').value || generatePrompt(); await navigator.clipboard.writeText(p); toast('تم نسخ الـ Prompt');}
+async function runGeminiAnalysis(){
+  const key=document.getElementById('geminiKey').value.trim();
+  const model=document.getElementById('geminiModel').value.trim() || 'gemini-3.5-flash';
+  const out=document.getElementById('aiOutput');
+  const prompt=document.getElementById('aiPrompt').value || generatePrompt();
+  if(!key){out.textContent='ضع Gemini API Key أو استخدم زر نسخ Prompt للصقه في ChatGPT/Gemini.';return;}
+  if(document.getElementById('saveKey').checked) localStorage.setItem('gemini-api-key-rfs',key); else localStorage.removeItem('gemini-api-key-rfs');
+  out.textContent='جاري تشغيل Gemini...';
+  try{
+    const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(key)}`,{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{temperature:0.35,topP:0.9,maxOutputTokens:1800}})
+    });
+    const json=await res.json();
+    if(!res.ok) throw new Error(json.error?.message || 'Gemini API error');
+    const text=json.candidates?.[0]?.content?.parts?.map(p=>p.text).join('\n') || 'لم يرجع Gemini نصاً واضحاً.';
+    out.textContent=text;
+  }catch(e){out.textContent='تعذر تشغيل Gemini: '+e.message+'\n\nيمكنك نسخ الـ Prompt وتشغيله يدوياً في Gemini Pro أو ChatGPT Plus.';}
+}
+
+function renderAll(full=true){
+  renderStores(); renderSettings(); renderVolume(); renderMatrix(); renderOverview(); renderDashboard(); renderProfit(); renderEvaluation(); renderPartnerPitch(); renderStressTest(); renderScenarioLibrary(); renderPartnerView(); renderCompanyPresentation(); renderAdmin(); applyLanguage();
+  if(!window.__RFS_SUPPRESS_AUTOSAVE__) saveData();
+}
+function saveData(){ if(window.scheduleCloudAutosave) window.scheduleCloudAutosave('data-change'); }
+function loadData(show=true){
+  if(show) toast('الحفظ المحلي غير مفعل. استخدم Firebase Cloud أو استيراد JSON.');
+}
+function ensureShape(){
+  app.settings={pointValue:1,globalCap:50,redemptionUtil:80,circulationRate:75,worstStress:35,bestRelief:35,...(app.settings||{})};
+  app.stores=Array.isArray(app.stores)?app.stores:[]; app.volume=app.volume||{}; app.matrix=app.matrix||{};
+}
+function exportJSON(){downloadFile('reward-flow-simulator-data.json',JSON.stringify(app,null,2),'application/json');}
+function importJSON(e){const file=e.target.files[0]; if(!file) return; const reader=new FileReader(); reader.onload=()=>{try{app=JSON.parse(reader.result);ensureShape();renderAll();toast('تم الاستيراد');}catch(err){toast('ملف غير صالح');}}; reader.readAsText(file);}
+function downloadFile(name,content,type='text/plain'){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([content],{type}));a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+function csvEscape(v){return '"'+String(v??'').replace(/"/g,'""')+'"'}
+function exportStoresCSV(){
+  const rows=[['Store','Sector','Price','Profit %','Commission %','Reward % of commission','Commission JOD','Reward JOD','Net Company Commission','Store Due','Economic After','Actual Burden %','Apparent Burden %']];
+  app.stores.forEach(s=>{const c=calcStore(s);rows.push([s.name,s.sector,c.price,s.profitPct,s.commissionPct,s.rewardPct,c.commission,c.reward,c.netCompany,c.storeDue,c.economicAfter,c.merchantActualPct,c.apparentPct]);});
+  downloadFile('stores-products.csv',rows.map(r=>r.map(csvEscape).join(',')).join('\n'),'text/csv');
+}
+function exportVolumeCSV(){
+  const rows=[['Store','Transactions','Avg Basket','Redeem Users %','Earn Only %','New Customers %','Push Lift %','Attractiveness 1-10','Self Retention %','Sales','Issued Points']];
+  app.stores.forEach(s=>{const v=ensureVolumeEntry(s); const sim=calcStoreSimulation(s); rows.push([s.name,v.transactions,v.avgBasket,v.redeemUsersPct,v.earnOnlyPct,v.newCustomersPct,v.pushLiftPct,v.attractiveness,v.selfRetentionPct,sim.totalSales,sim.issuedPoints]);});
+  downloadFile('volume.csv',rows.map(r=>r.map(csvEscape).join(',')).join('\n'),'text/csv');
+}
+function exportResultsCSV(){
+  const data=calculateScenario(currentScenario); const rows=[['Scenario','Store','Sector','Sales','Issued Points','Redeemed Points','Net Points','Company Commission','Net Company After Rewards and Redemption','Risk','Push Action']];
+  data.ids.forEach(id=>{const p=data.per[id];rows.push([currentScenario,p.store.name,p.store.sector,p.totalSales,p.issuedPoints,p.redeemedPoints,p.netPoints,p.commissionOnOriginal,p.companyNetAfterIssued-p.redeemedJod,p.risk.label,p.pushNeed]);});
+  downloadFile(`results-${currentScenario}.csv`,rows.map(r=>r.map(csvEscape).join(',')).join('\n'),'text/csv');
+}
+function exportProfitCSV(){
+  const {rows}=getProfitMetrics(currentScenario);
+  const out=[['Scenario','Store','Sales','Gross Company Commission','Issued Rewards Cost','Redeemed Compensation','Net After Issued Rewards','Cash Net After Redemption','Conservative Net Profit','Conservative Margin %','Commission Retention %','Points Liability Balance']];
+  rows.forEach(r=>out.push([currentScenario,r.p.store.name,r.p.totalSales,r.grossCommission,r.issuedCost,r.redeemedCost,r.netAfterIssued,r.cashAfterRedeemed,r.conservativeNet,r.margin,r.retention,r.liability]));
+  downloadFile(`company-profit-${currentScenario}.csv`,out.map(r=>r.map(csvEscape).join(',')).join('\n'),'text/csv');
+}
+window.addEventListener('resize',()=>{renderOverview();renderDashboard();renderProfit();});
+
+window.RFSBridge = {
+  getApp: () => JSON.parse(JSON.stringify(app)),
+  setApp: (state) => {
+    app = state || {settings:{pointValue:1,globalCap:50,redemptionUtil:80,circulationRate:75,worstStress:35,bestRelief:35},stores:[],volume:{},matrix:{}};
+    ensureShape();
+    renderAll();
+  },
+  getLibrary: () => JSON.parse(JSON.stringify(scenarioLibrary || [])),
+  setLibrary: (library) => {
+    scenarioLibrary = Array.isArray(library) ? library : [];
+    saveScenarioLibrary(false);
+    renderScenarioLibrary();
+  },
+  getCurrentScenario: () => currentScenario,
+  setCloudStatus: (type, text) => {
+    const dot = document.getElementById('cloudStatusDot');
+    const label = document.getElementById('cloudStatusText');
+    if(dot){ dot.className = 'cloud-dot ' + (type || ''); }
+    if(label){ label.textContent = text || ''; }
+  },
+  toast: (msg) => toast(msg),
+  csvEscape: (v) => csvEscape(v),
+  downloadFile: (name, content, type='text/plain') => downloadFile(name, content, type)
+};
+window.saveCurrentToFirebase = () => toast('Firebase لم يجهز بعد. تأكد من الإنترنت وتفعيل Firestore.');
+window.refreshFirebaseScenarios = () => toast('Firebase لم يجهز بعد.');
+window.scheduleCloudAutosave = () => {};
+window.forceCloudSync = () => window.saveCurrentToFirebase();
+window.showFirestoreRules = () => {
+  openModal('Firestore Rules مؤقتة للتجربة', `<div class="notice warn">استخدمها للتجربة الداخلية فقط، ولا تتركها مفتوحة إذا نشرت الرابط.</div><pre class="rules-box">rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /reward_simulator/{docId} {
+      allow read, write: if request.time < timestamp.date(2026, 8, 1);
+    }
+  }
+}</pre>`);
+};
+window.exportFirebaseListCSV = () => toast('حدّث قائمة Firebase أولاً.');
+
+window.__RFS_SUPPRESS_AUTOSAVE__ = true;
+init();
+</script>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+  import { getFirestore, collection, doc, setDoc, getDoc, getDocs, deleteDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyA2tNjm2D6ERQLIN5dggEU1RXSwbVR-1Gc",
+    authDomain: "dealit-baf01.firebaseapp.com",
+    projectId: "dealit-baf01",
+    storageBucket: "dealit-baf01.firebasestorage.app",
+    messagingSenderId: "420599936031",
+    appId: "1:420599936031:web:d5dff18ab7253834f1912a",
+    measurementId: "G-VQB2J200M6"
+  };
+
+  const COLLECTION = 'reward_simulator';
+  const ACTIVE_DOC = 'current_study';
+  let db = null;
+  let cloudRows = [];
+  let autoSaveReady = false;
+  let isApplyingRemote = false;
+  let autoSaveTimer = null;
+  let lastSavedHash = '';
+
+  function safeId(name){
+    return (name || 'scenario')
+      .trim()
+      .replace(/[\\/#?\[\]*]/g, '-')
+      .replace(/\s+/g, '-')
+      .slice(0, 80) + '-' + Date.now();
+  }
+  function money(v){ return Number(v||0).toLocaleString(undefined,{maximumFractionDigits:0}); }
+  function dateText(v){
+    try{
+      if(!v) return '-';
+      if(typeof v.toDate === 'function') return v.toDate().toLocaleString();
+      return new Date(v).toLocaleString();
+    }catch(e){ return '-'; }
+  }
+  function setStatus(type, text){ window.RFSBridge?.setCloudStatus(type, text); }
+  function summarizeState(state){
+    const stores = state?.stores || [];
+    const sales = stores.reduce((sum,s)=> sum + (Number(state?.volume?.[s.id]?.transactions || 0) * Number(state?.volume?.[s.id]?.avgBasket || s.price || 0)), 0);
+    const sectors = [...new Set(stores.map(s=>s.sector).filter(Boolean))].join('، ');
+    return {storeCount:stores.length, sales, sectors};
+  }
+  function getStudyName(){
+    const input = document.getElementById('cloudScenarioName');
+    return (input?.value || '').trim() || 'Dealit Main Study';
+  }
+  function buildPayload(name=getStudyName(), id=ACTIVE_DOC){
+    const state = window.RFSBridge.getApp();
+    const library = window.RFSBridge.getLibrary();
+    return {
+      id,
+      name,
+      version: 'v11-auto-sync',
+      savedAt: new Date().toISOString(),
+      updatedAt: serverTimestamp(),
+      currentScenario: window.RFSBridge.getCurrentScenario(),
+      summary: summarizeState(state),
+      state,
+      scenarioLibrary: library,
+      autosync: true
+    };
+  }
+  function hashState(){
+    try{return JSON.stringify({state:window.RFSBridge.getApp(), library:window.RFSBridge.getLibrary(), name:getStudyName()});}
+    catch(e){return String(Date.now());}
+  }
+  async function saveActiveStudy(source='manual'){
+    if(!db) return setStatus('error', 'Firebase غير جاهز');
+    if(isApplyingRemote) return;
+    const nextHash = hashState();
+    if(source !== 'manual' && nextHash === lastSavedHash) return;
+    try{
+      setStatus('', source === 'manual' ? 'جاري المزامنة الآن...' : 'جاري الحفظ التلقائي...');
+      await setDoc(doc(db, COLLECTION, ACTIVE_DOC), buildPayload(getStudyName(), ACTIVE_DOC), { merge:false });
+      lastSavedHash = nextHash;
+      const label = document.getElementById('cloudScenarioName');
+      if(label && !label.value) label.value = 'Dealit Main Study';
+      setStatus('ready', 'Auto Sync مفعّل — آخر حفظ: ' + new Date().toLocaleTimeString());
+      if(source === 'manual') window.RFSBridge.toast('تمت المزامنة مع Firebase');
+    }catch(err){
+      setStatus('error', 'فشل الحفظ التلقائي: ' + err.message);
+      if(source === 'manual') window.RFSBridge.toast('فشل المزامنة مع Firebase');
+    }
+  }
+  async function loadActiveStudy(){
+    if(!db) return;
+    try{
+      setStatus('', 'جاري تحميل آخر دراسة من Firebase...');
+      const snap = await getDoc(doc(db, COLLECTION, ACTIVE_DOC));
+      if(snap.exists()){
+        const data = snap.data();
+        isApplyingRemote = true;
+        window.__RFS_SUPPRESS_AUTOSAVE__ = true;
+        window.RFSBridge.setApp(data.state || {});
+        window.RFSBridge.setLibrary(data.scenarioLibrary || []);
+        const input = document.getElementById('cloudScenarioName');
+        if(input) input.value = data.name || 'Dealit Main Study';
+        lastSavedHash = hashState();
+        setStatus('ready', 'تم تحميل آخر دراسة من Firebase — Auto Sync جاهز');
+      }else{
+        const input = document.getElementById('cloudScenarioName');
+        if(input && !input.value) input.value = 'Dealit Main Study';
+        setStatus('', 'لا توجد دراسة سابقة. سيتم إنشاء الدراسة تلقائياً.');
+      }
+    }catch(err){
+      setStatus('error', 'فشل تحميل الدراسة الرئيسية: ' + err.message);
+    }finally{
+      isApplyingRemote = false;
+      autoSaveReady = true;
+      window.__RFS_SUPPRESS_AUTOSAVE__ = false;
+      window.refreshFirebaseScenarios(false);
+      window.scheduleCloudAutosave('initial');
+    }
+  }
+
+  try{
+    const app = initializeApp(firebaseConfig);
+    db = getFirestore(app);
+    setStatus('ready', 'Firebase جاهز - بدء Auto Sync');
+    loadActiveStudy();
+  }catch(err){
+    setStatus('error', 'تعذر تهيئة Firebase: ' + err.message);
+    window.__RFS_SUPPRESS_AUTOSAVE__ = false;
+  }
+
+  window.scheduleCloudAutosave = function(reason='data-change'){
+    if(!db || !autoSaveReady || isApplyingRemote) return;
+    clearTimeout(autoSaveTimer);
+    setStatus('', 'تغييرات غير محفوظة — سيتم الحفظ تلقائياً...');
+    autoSaveTimer = setTimeout(()=>saveActiveStudy(reason), 900);
+  };
+  window.forceCloudSync = async function(){
+    clearTimeout(autoSaveTimer);
+    await saveActiveStudy('manual');
+    await window.refreshFirebaseScenarios(false);
+  };
+  window.saveCurrentToFirebase = window.forceCloudSync;
+
+  window.refreshFirebaseScenarios = async function(showToast=true){
+    if(!db) return setStatus('error', 'Firebase غير جاهز');
+    try{
+      setStatus('', 'جاري تحميل قائمة الدراسات...');
+      const snap = await getDocs(collection(db, COLLECTION));
+      cloudRows = snap.docs.map(d => ({docId:d.id, ...d.data()})).sort((a,b)=> String(b.savedAt||'').localeCompare(String(a.savedAt||'')));
+      renderCloudTable();
+      setStatus('ready', `Auto Sync مفعّل — ${cloudRows.length} ملف في Firebase`);
+      if(showToast) window.RFSBridge.toast('تم تحديث قائمة Firebase');
+    }catch(err){
+      setStatus('error', 'فشل تحميل القائمة: ' + err.message);
+    }
+  };
+
+  window.loadFirebaseScenario = async function(docId){
+    if(!db) return;
+    if(!confirm('تحميل هذه الدراسة سيستبدل البيانات الحالية في الشاشة. هل تريد المتابعة؟')) return;
+    try{
+      setStatus('', 'جاري تحميل الدراسة...');
+      const snap = await getDoc(doc(db, COLLECTION, docId));
+      if(!snap.exists()) throw new Error('الدراسة غير موجودة');
+      const data = snap.data();
+      isApplyingRemote = true;
+      window.__RFS_SUPPRESS_AUTOSAVE__ = true;
+      window.RFSBridge.setApp(data.state || {});
+      window.RFSBridge.setLibrary(data.scenarioLibrary || []);
+      document.getElementById('cloudScenarioName').value = data.name || '';
+      lastSavedHash = hashState();
+      window.RFSBridge.toast('تم تحميل الدراسة من Firebase');
+      setStatus('ready', 'تم تحميل الدراسة: ' + (data.name || docId));
+    }catch(err){
+      setStatus('error', 'فشل التحميل: ' + err.message);
+    }finally{
+      isApplyingRemote = false;
+      window.__RFS_SUPPRESS_AUTOSAVE__ = false;
+      window.scheduleCloudAutosave('loaded-scenario');
+    }
+  };
+
+  window.deleteFirebaseScenario = async function(docId){
+    if(!db) return;
+    if(docId === ACTIVE_DOC){
+      if(!confirm('هذا هو ملف الدراسة الرئيسي. حذفه سيجعل التطبيق يبدأ من البيانات الافتراضية. هل تريد المتابعة؟')) return;
+    }else if(!confirm('حذف هذه الدراسة من Firebase؟')) return;
+    try{
+      await deleteDoc(doc(db, COLLECTION, docId));
+      window.RFSBridge.toast('تم حذف الدراسة من Firebase');
+      await window.refreshFirebaseScenarios(false);
+    }catch(err){ setStatus('error', 'فشل الحذف: ' + err.message); }
+  };
+
+  window.exportFirebaseListCSV = function(){
+    if(!cloudRows.length){ window.RFSBridge.toast('لا توجد بيانات في القائمة'); return; }
+    const esc = window.RFSBridge.csvEscape;
+    const rows = [['Name','Stores','Expected Sales','Sectors','Saved At','Version','Document ID']];
+    cloudRows.forEach(r=>rows.push([r.name || r.docId, r.summary?.storeCount || 0, r.summary?.sales || 0, r.summary?.sectors || '', r.savedAt || '', r.version || '', r.docId]));
+    window.RFSBridge.downloadFile('firebase-scenarios-list.csv', rows.map(r=>r.map(esc).join(',')).join('\n'), 'text/csv');
+  };
+
+  window.showFirestoreRules = function(){
+    const rules = `rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /reward_simulator/{docId} {
+      allow read, write: if request.time < timestamp.date(2026, 8, 1);
+    }
+  }
+}`;
+    openModal('Firestore Rules مؤقتة للتجربة', `<div class="notice warn">هذه Rules مناسبة للتجربة الداخلية فقط. إذا نشرت الرابط أو أعطيت الوصول لآخرين، الأفضل نضيف Firebase Authentication.</div><pre class="rules-box">${rules}</pre>`);
+  };
+
+  function renderCloudTable(){
+    const table = document.getElementById('cloudTable');
+    if(!table) return;
+    if(!cloudRows.length){ table.innerHTML = '<tr><td class="empty">لا توجد دراسات محفوظة على Firebase بعد.</td></tr>'; return; }
+    table.innerHTML = `<thead><tr><th>الدراسة</th><th>نوع الملف</th><th>عدد المتاجر</th><th>مبيعات متوقعة</th><th>القطاعات</th><th>تاريخ الحفظ</th><th>الإجراء</th></tr></thead><tbody>` +
+      cloudRows.map(r=>`<tr>
+        <td><b>${r.name || r.docId || '-'}</b><br><span class="mini">${r.version || ''}</span></td>
+        <td>${r.docId === ACTIVE_DOC ? '<span class="badge low">الدراسة الرئيسية</span>' : '<span class="badge info">نسخة</span>'}</td>
+        <td>${r.summary?.storeCount || 0}</td>
+        <td>${money(r.summary?.sales)} JOD</td>
+        <td>${r.summary?.sectors || '-'}</td>
+        <td>${dateText(r.updatedAt || r.savedAt)}</td>
+        <td><div class="cloud-table-actions"><button class="btn small primary" onclick="window.loadFirebaseScenario('${r.docId}')">Load</button><button class="btn small danger" onclick="window.deleteFirebaseScenario('${r.docId}')">Delete</button></div></td>
+      </tr>`).join('') + '</tbody>';
+  }
+</script>
+
+</body>
+</html>
