@@ -1,0 +1,18 @@
+Reward Flow Simulator V12 - UI Refresh
+
+Design updates:
+- Clean fintech dashboard aesthetic with deep navy/slate sidebar and crisp white glass panels.
+- Inter typography added with a readable data-dense type system.
+- Electric indigo accent system added across buttons, tabs, cards, and focus states.
+- Glowing animated gradient status bar added across hero cards, changing with active scenario color.
+- Presentation helper/hint paragraphs are hidden to reduce clutter.
+- Overview section cleaned and renamed to Executive Overview / Commercial Logic.
+- KPI cards modernized with top gradient bars and micro-trend badges.
+- Tables improved with sticky headers, cleaner spacing, hover states, and better inputs.
+- Badge system polished for Low / Medium / High / Critical / Info.
+- Sidebar grouped into Core Workspace, Inputs, Analysis, and Outputs.
+- Mobile responsiveness refined for cards, tables, and sidebar.
+
+Files:
+- index.html: ready for GitHub Pages / Cloudflare hosting.
+- reward-flow-simulator-v12.html: same updated app with versioned filename.
